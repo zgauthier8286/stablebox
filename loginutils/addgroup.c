@@ -5,7 +5,7 @@
  * Copyright (C) 1999 by Lineo, inc. and John Beppu
  * Copyright (C) 1999,2000,2001 by John Beppu <beppu@codepoet.org>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  */
 

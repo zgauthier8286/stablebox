@@ -9,7 +9,7 @@
  * Copyright (c) 1989 The Regents of the University of California.
  * Derived from software contributed to Berkeley by Mike Muuss.
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <sys/param.h>

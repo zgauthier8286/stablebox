@@ -2,7 +2,7 @@
  * getopt.c - Enhanced implementation of BSD getopt(1)
  *   Copyright (c) 1997, 1998, 1999, 2000  Frodo Looijaard <frodol@dds.nl>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 /*

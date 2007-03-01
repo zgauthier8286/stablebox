@@ -2,7 +2,7 @@
 /* `time' utility to display resource usage of processes.
    Copyright (C) 1990, 91, 92, 93, 96 Free Software Foundation, Inc.
 
-   Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+   Licensed under GPLv2, see file LICENSE in this tarball for details.
 */
 /* Originally written by David Keppel <pardo@cs.washington.edu>.
    Heavily modified by David MacKenzie <djm@gnu.ai.mit.edu>.

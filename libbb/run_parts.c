@@ -7,7 +7,7 @@
  * rewrite to vfork usage by
  * Copyright (C) 2002 by Vladimir Oleynik <dzo@simtreas.ru>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 

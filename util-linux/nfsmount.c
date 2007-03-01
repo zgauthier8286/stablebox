@@ -3,7 +3,7 @@
  * nfsmount.c -- Linux NFS mount
  * Copyright (C) 1993 Rick Sladkey <jrs@world.std.com>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  * Wed Feb  8 12:51:48 1995, biro@yggdrasil.com (Ross Biro): allow all port
  * numbers to be specified on the command line.

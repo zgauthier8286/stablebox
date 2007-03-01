@@ -25,7 +25,7 @@
  * Journal recovery routines for the generic filesystem journaling code;
  * part of the ext2fs journaling system.
  *
- * Licensed under GPLv2 or later, see file License in this tarball for details.
+ * Licensed under GPLv2, see file License in this tarball for details.
  */
 
 #ifndef _GNU_SOURCE

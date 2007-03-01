@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2000 by Randolph Chung <tausq@debian.org>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 /* BB_AUDIT SUSv3 _NOT_ compliant -- option -G is not currently supported. */

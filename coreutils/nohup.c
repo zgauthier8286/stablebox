@@ -6,7 +6,7 @@
  * 
  * Copyright 2006 Rob Landley <rob@landley.net>
  * 
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <fcntl.h>

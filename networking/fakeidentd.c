@@ -6,7 +6,7 @@
  * Original Author: Tomi Ollila <too@iki.fi>
  *                  http://www.guru-group.fi/~too/sw/
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include "busybox.h"

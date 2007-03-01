@@ -6,7 +6,7 @@
  *
  * iso-format handling added by Robert Griebl <griebl@gmx.de>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
 */
 
 #include <stdlib.h>
