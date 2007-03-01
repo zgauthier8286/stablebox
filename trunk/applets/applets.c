@@ -51,7 +51,7 @@ const size_t NUM_APPLETS = (sizeof (applets) / sizeof (struct BB_applet) - 1);
 #include "pwd_.h"
 #include "grp_.h"
 
-#define CONFIG_FILE "/etc/busybox.conf"
+#define CONFIG_FILE "/etc/stablebox.conf"
 
 /* applets [] is const, so we have to define this "override" structure */
 static struct BB_suid_config
@@ -229,7 +229,7 @@ static void parse_config_file(void)
 			/* Ok, we have an applet name.  Process the rhs if this
 			 * applet is currently built in and ignore it otherwise.
 			 * Note: This can hide config file bugs which only pop
-			 * up when the busybox configuration is changed. */
+			 * up when the stablebox configuration is changed. */
 			if ((applet = find_applet_by_name(s))) {
 				/* Note: We currently don't check for duplicates!
 				 * The last config line for each applet will be the
@@ -298,7 +298,7 @@ static void parse_config_file(void)
 		 * section header is treated as an error.  This is how
 		 * the old code worked, but it may not be desirable.
 		 * We may want to simply ignore such lines in case they
-		 * are used in some future version of busybox. */
+		 * are used in some future version of stablebox. */
 		if (!section) {
 			parse_error("keyword outside section");
 		}
@@ -353,14 +353,14 @@ static void check_suid (struct BB_applet *applet)
 	  if ((sct->m_mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {     /* *both* have to be set for sgid */
 		if (setegid (sct->m_gid))
 		  bb_error_msg_and_die
-			("BusyBox binary has insufficient rights to set proper GID for applet!");
+			("Stablebox binary has insufficient rights to set proper GID for applet!");
 	  } else
 		setgid (rgid);                  /* no sgid -> drop */
 
 	  if (sct->m_mode & S_ISUID) {
 		if (seteuid (sct->m_uid))
 		  bb_error_msg_and_die
-			("BusyBox binary has insufficient rights to set proper UID for applet!");
+			("Stablebox binary has insufficient rights to set proper UID for applet!");
 	  } else
 		setuid (ruid);                  /* no suid -> drop */
 	} else {
@@ -482,7 +482,7 @@ void run_applet_by_name (const char *name, int argc, char **argv)
 {
 	if(ENABLE_FEATURE_SUID_CONFIG) parse_config_file ();
 
-	if(!strncmp(name, "busybox", 7)) busybox_main(argc, argv);
+	if(!strncmp(name, "stablebox", 7)) stablebox_main(argc, argv);
 	/* Do a binary search to find the applet entry given the name. */
 	applet_using = find_applet_by_name(name);
 	if(applet_using) {

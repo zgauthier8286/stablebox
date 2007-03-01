@@ -97,7 +97,7 @@
 	"\t-c\tWrite output to standard output\n" \
 	"\t-f\tForce"
 
-#define busybox_notes_usage \
+#define stablebox_notes_usage \
 	"Hello world!\n"
 
 #define bzcat_trivial_usage \
@@ -220,7 +220,7 @@
 	"Run COMMAND with root directory set to NEWROOT."
 #define chroot_example_usage \
 	"$ ls -l /bin/ls\n" \
-	"lrwxrwxrwx    1 root     root          12 Apr 13 00:46 /bin/ls -> /BusyBox\n" \
+	"lrwxrwxrwx    1 root     root          12 Apr 13 00:46 /bin/ls -> /stablebox\n" \
 	"# mount /dev/hdc1 /mnt -t minix\n" \
 	"# chroot /mnt\n" \
 	"# ls -l /bin/ls\n" \
@@ -262,7 +262,7 @@
 #define bbconfig_trivial_usage \
 	""
 #define bbconfig_full_usage \
-	"Print the config file which built busybox"
+	"Print the config file which built stablebox"
 
 #define cp_trivial_usage \
 	"[OPTION]... SOURCE DEST"
@@ -536,7 +536,7 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-x\tExtract packages filesystem tree to directory\n" \
 	"\t-X\tVerbose extract"
 #define dpkg_deb_example_usage \
-	"$ dpkg-deb -X ./busybox_0.48-1_i386.deb /tmp\n"
+	"$ dpkg-deb -X ./stablebox_0.48-1_i386.deb /tmp\n"
 
 #define du_trivial_usage \
 	"[-aHLdclsx" USE_FEATURE_HUMAN_READABLE("hm") "k] [FILE]..."
@@ -892,7 +892,7 @@ USE_FEATURE_DATE_ISOFMT( \
 	"$ cat getopt.test\n" \
 	"#!/bin/sh\n" \
 	"GETOPT=`getopt -o ab:c:: --long a-long,b-long:,c-long:: \\\n" \
-	"       -n 'example.busybox' -- \"$@\"`\n" \
+	"       -n 'example.stablebox' -- \"$@\"`\n" \
 	"if [ $? != 0 ] ; then  exit 1 ; fi\n" \
 	"eval set -- \"$GETOPT\"\n" \
 	"while true ; do\n" \
@@ -967,11 +967,11 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-f\tForce read when source is a terminal\n" \
 	"\t-t\tTest compressed file integrity"
 #define gunzip_example_usage \
-	"$ ls -la /tmp/BusyBox*\n" \
-	"-rw-rw-r--    1 andersen andersen   557009 Apr 11 10:55 /tmp/BusyBox-0.43.tar.gz\n" \
-	"$ gunzip /tmp/BusyBox-0.43.tar.gz\n" \
-	"$ ls -la /tmp/BusyBox*\n" \
-	"-rw-rw-r--    1 andersen andersen  1761280 Apr 14 17:47 /tmp/BusyBox-0.43.tar\n"
+	"$ ls -la /tmp/stablebox*\n" \
+	"-rw-rw-r--    1 andersen andersen   557009 Apr 11 10:55 /tmp/stablebox-0.43.tar.gz\n" \
+	"$ gunzip /tmp/stablebox-0.43.tar.gz\n" \
+	"$ ls -la /tmp/stablebox*\n" \
+	"-rw-rw-r--    1 andersen andersen  1761280 Apr 14 17:47 /tmp/stablebox-0.43.tar\n"
 
 #define gzip_trivial_usage \
 	"[OPTION]... [FILE]..."
@@ -983,11 +983,11 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-d\tDecompress\n" \
 	"\t-f\tForce write when destination is a terminal"
 #define gzip_example_usage \
-	"$ ls -la /tmp/busybox*\n" \
-	"-rw-rw-r--    1 andersen andersen  1761280 Apr 14 17:47 /tmp/busybox.tar\n" \
-	"$ gzip /tmp/busybox.tar\n" \
-	"$ ls -la /tmp/busybox*\n" \
-	"-rw-rw-r--    1 andersen andersen   554058 Apr 14 17:49 /tmp/busybox.tar.gz\n"
+	"$ ls -la /tmp/stablebox*\n" \
+	"-rw-rw-r--    1 andersen andersen  1761280 Apr 14 17:47 /tmp/stablebox.tar\n" \
+	"$ gzip /tmp/stablebox.tar\n" \
+	"$ ls -la /tmp/stablebox*\n" \
+	"-rw-rw-r--    1 andersen andersen   554058 Apr 14 17:49 /tmp/stablebox.tar.gz\n"
 
 #define halt_trivial_usage \
 	"[-d<delay>] [-n<nosync>] [-f<force>]"
@@ -1236,11 +1236,11 @@ USE_FEATURE_DATE_ISOFMT( \
 #define init_notes_usage \
 "This version of init is designed to be run only by the kernel.\n" \
 "\n" \
-"BusyBox init doesn't support multiple runlevels.  The runlevels field of\n" \
-"the /etc/inittab file is completely ignored by BusyBox init. If you want \n" \
+"Stablebox init doesn't support multiple runlevels.  The runlevels field of\n" \
+"the /etc/inittab file is completely ignored by Stablebox init. If you want \n" \
 "runlevels, use sysvinit.\n" \
 "\n" \
-"BusyBox init works just fine without an inittab.  If no inittab is found, \n" \
+"Stablebox init works just fine without an inittab.  If no inittab is found, \n" \
 "it has the following default behavior:\n" \
 "\n" \
 "	::sysinit:/etc/init.d/rcS\n" \
@@ -1262,15 +1262,15 @@ USE_FEATURE_DATE_ISOFMT( \
 "\n" \
 "	<id>:\n" \
 "\n" \
-"		WARNING: This field has a non-traditional meaning for BusyBox init!\n" \
-"		The id field is used by BusyBox init to specify the controlling tty for\n" \
+"		WARNING: This field has a non-traditional meaning for Stablebox init!\n" \
+"		The id field is used by Stablebox init to specify the controlling tty for\n" \
 "		the specified process to run on.  The contents of this field are\n" \
 "		appended to \"/dev/\" and used as-is.  There is no need for this field to\n" \
 "		be unique, although if it isn't you may have strange results.  If this\n" \
 "		field is left blank, the controlling tty is set to the console.  Also\n" \
-"		note that if BusyBox detects that a serial console is in use, then only\n" \
+"		note that if Stablebox detects that a serial console is in use, then only\n" \
 "		entries whose controlling tty is either the serial console or /dev/null\n" \
-"		will be run.  BusyBox init does nothing with utmp.  We don't need no\n" \
+"		will be run.  Stablebox init does nothing with utmp.  We don't need no\n" \
 "		stinkin' utmp.\n" \
 "\n" \
 "	<runlevels>:\n" \
@@ -1308,7 +1308,7 @@ USE_FEATURE_DATE_ISOFMT( \
 "\n" \
 "			'respawn' actions are run after the 'once' actions.  When a process\n" \
 "			started with a 'respawn' action exits, init automatically restarts\n" \
-"			it.  Unlike sysvinit, BusyBox init does not stop processes from\n" \
+"			it.  Unlike sysvinit, Stablebox init does not stop processes from\n" \
 "			respawning out of control.  The 'askfirst' actions acts just like\n" \
 "			respawn, except that before running the specified process it\n" \
 "			displays the line \"Please press Enter to activate this console.\"\n" \
@@ -1561,9 +1561,9 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-b\tmake a backup of the target (if exists) before link operation\n" \
 	"\t-S suffix\tuse suffix instead of ~ when making backup files"
 #define ln_example_usage \
-	"$ ln -s BusyBox /tmp/ls\n" \
+	"$ ln -s Stablebox /tmp/ls\n" \
 	"$ ls -l /tmp/ls\n" \
-	"lrwxrwxrwx    1 root     root            7 Apr 12 18:39 ls -> BusyBox*\n"
+	"lrwxrwxrwx    1 root     root            7 Apr 12 18:39 ls -> Stablebox*\n"
 
 #define loadfont_trivial_usage \
 	"< font"
@@ -1791,13 +1791,13 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-s\tdon't output anything, status code shows success\n" \
 	"\t-w\twarn about improperly formated MD5 checksum lines")
 #define md5sum_example_usage \
-	"$ md5sum < busybox\n" \
+	"$ md5sum < stablebox\n" \
 	"6fd11e98b98a58f64ff3398d7b324003\n" \
-	"$ md5sum busybox\n" \
-	"6fd11e98b98a58f64ff3398d7b324003  busybox\n" \
+	"$ md5sum stablebox\n" \
+	"6fd11e98b98a58f64ff3398d7b324003  stablebox\n" \
 	"$ md5sum -c -\n" \
-	"6fd11e98b98a58f64ff3398d7b324003  busybox\n" \
-	"busybox: OK\n" \
+	"6fd11e98b98a58f64ff3398d7b324003  stablebox\n" \
+	"stablebox: OK\n" \
 	"^D\n"
 
 #define mdev_trivial_usage \
@@ -2583,7 +2583,7 @@ USE_FEATURE_MDEV_CONFIG( \
 	"[FILE]...\n" \
 	"or: sh -c command [args]..."
 #define lash_full_usage \
-	"The BusyBox LAme SHell (command interpreter)"
+	"The stablebox LAme SHell (command interpreter)"
 #define lash_notes_usage \
 	"This command does not yet have proper documentation.\n\n" \
 	"Use lash just as you would use any other shell.  It properly handles pipes,\n" \
@@ -3311,9 +3311,9 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"Options:\n" \
 	"\t-o FILE\tdirect output to FILE"
 #define uudecode_example_usage \
-	"$ uudecode -o busybox busybox.uu\n" \
-	"$ ls -l busybox\n" \
-	"-rwxr-xr-x   1 ams      ams        245264 Jun  7 21:35 busybox\n"
+	"$ uudecode -o stablebox stablebox.uu\n" \
+	"$ ls -l stablebox\n" \
+	"-rwxr-xr-x   1 ams      ams        245264 Jun  7 21:35 stablebox\n"
 
 #define uuencode_trivial_usage \
 	"[OPTION] [INFILE] REMOTEFILE"
@@ -3322,10 +3322,10 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"Options:\n" \
 	"\t-m\tuse base64 encoding per RFC1521"
 #define uuencode_example_usage \
-	"$ uuencode busybox busybox\n" \
-	"begin 755 busybox\n" \
+	"$ uuencode stablebox stablebox\n" \
+	"begin 755 stablebox\n" \
 	"<encoded file snipped>\n" \
-	"$ uudecode busybox busybox > busybox.uu\n" \
+	"$ uudecode stablebox stablebox > stablebox.uu\n" \
 	"$\n"
 
 #define vconfig_trivial_usage \

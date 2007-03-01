@@ -1,12 +1,9 @@
-# Makefile for busybox
+# Makefile for stablebox
 #
 # Copyright (C) 1999-2004 by Erik Andersen <andersen@codepoet.org>
 #
 # Licensed under GPLv2, see the file LICENSE in this tarball for details.
 #
-
-# You shouldn't have to edit anything in this file for configuration
-# purposes, try "make help" or read http://busybox.net/FAQ.html.
 
 .PHONY: dummy subdirs release distclean clean config oldconfig menuconfig \
         tags check test depend dep buildtree hosttools _all checkhelp \
@@ -138,9 +135,7 @@ help:
 	@echo
 	@echo 'Build:'
 	@echo '  all			- Executable and documentation'
-	@echo '  busybox		- the swiss-army executable'
-	@echo '  doc			- docs/BusyBox.{txt,html,1}'
-	@echo '  html			- create html-based cross-reference'
+	@echo '  stablebox		- the swiss-army executable'
 	@echo
 	@echo 'Configuration:'
 	@echo '  allnoconfig		- disable all symbols in .config'
@@ -156,17 +151,17 @@ help:
 	@echo '			  make SED="$(top_builddir)/sed"'
 	@echo
 	@echo 'Installation:'
-	@echo '  install		- install busybox into $(PREFIX)'
+	@echo '  install		- install stablebox into $(PREFIX)'
 	@echo '  uninstall'
 	@echo
 	@echo 'Development:'
-	@echo '  baseline		- create busybox_old for bloatcheck.'
+	@echo '  baseline		- create stablebox_old for bloatcheck.'
 	@echo '  bloatcheck		- show size difference between old and new versions'
 	@echo '  check			- run the test suite for all applets'
 	@echo '  checkhelp		- check for missing help-entries in Config.in'
 	@echo '  randconfig		- generate a random configuration'
 	@echo '  release		- create a distribution tarball'
-	@echo '  sizes			- show size of all enabled busybox symbols'
+	@echo '  sizes			- show size of all enabled stablebox symbols'
 	@echo '  objsizes		- show size of each .o object built'
 	@echo
 
@@ -246,14 +241,14 @@ hosttools:
 	$(Q)(grep -v CONFIG_SED .config.in ; \
 	 echo "CONFIG_SED=y" ; ) > .config
 	$(Q)$(MAKE) CC="$(HOSTCC)" CFLAGS="$(HOSTCFLAGS) $(INCS)" oldconfig include/bb_config.h
-	$(Q)$(MAKE) CC="$(HOSTCC)" CFLAGS="$(HOSTCFLAGS) $(INCS)" busybox
+	$(Q)$(MAKE) CC="$(HOSTCC)" CFLAGS="$(HOSTCFLAGS) $(INCS)" stablebox 
 	$(Q)[ -f .config.bak ] && mv .config.bak .config || rm .config
-	mv busybox sed
+	mv stablebox sed
 	@echo "Now do: $(MAKE) SED=$(top_builddir)/sed <target>"
 
 else # ifneq ($(strip $(HAVE_DOT_CONFIG)),y)
 
-all: busybox busybox.links doc
+all: stablebox stablebox.links
 
 # In this section, we need .config
 -include $(top_builddir)/.config.cmd
@@ -264,112 +259,34 @@ endif # ifneq ($(strip $(HAVE_DOT_CONFIG)),y)
 -include $(top_builddir)/.config
 -include $(top_builddir)/.depend
 
-
-ifeq ($(strip $(CONFIG_BUILD_AT_ONCE)),y)
-libraries-y:=
-# Which parts of the internal libs are requested?
-# Per default we only want what was actually selected.
-# -a denotes all while -y denotes the selected ones.
-ifeq ($(strip $(CONFIG_FEATURE_FULL_LIBBUSYBOX)),y)
-LIBRARY_DEFINE:=$(LIBRARY_DEFINE-a)
-LIBRARY_SRC   :=$(LIBRARY_SRC-a)
-else # CONFIG_FEATURE_FULL_LIBBUSYBOX
-LIBRARY_DEFINE:=$(LIBRARY_DEFINE-y)
-LIBRARY_SRC   :=$(LIBRARY_SRC-y)
-endif # CONFIG_FEATURE_FULL_LIBBUSYBOX
-APPLET_SRC:=$(APPLET_SRC-y)
-APPLETS_DEFINE:=$(APPLETS_DEFINE-y)
-else  # CONFIG_BUILD_AT_ONCE
-# no --combine, build archives out of the individual .o
-# This was the old way the binary was built.
-libbusybox-obj:=archival/libunarchive/libunarchive.a \
-	networking/libiproute/libiproute.a \
-	libpwdgrp/libpwdgrp.a \
-	coreutils/libcoreutils/libcoreutils.a \
-	libbb/libbb.a
-libbusybox-obj:=$(patsubst %,$(top_builddir)/%,$(libbusybox-obj))
-
-ifeq ($(strip $(CONFIG_FEATURE_SHARED_BUSYBOX)),y)
-# linking against libbusybox, so don't build the .a already contained in the .so
-libraries-y:=$(filter-out $(libbusybox-obj),$(libraries-y))
-endif # CONFIG_FEATURE_SHARED_BUSYBOX
-endif # CONFIG_BUILD_AT_ONCE
-
-
-ifeq ($(strip $(CONFIG_BUILD_LIBBUSYBOX)),y)
-LD_LIBBUSYBOX:=libbusybox.so
-LIBBUSYBOX_SONAME:=$(LD_LIBBUSYBOX).$(MAJOR_VERSION).$(MINOR_VERSION).$(SUBLEVEL_VERSION)
-DO_INSTALL_LIBS:=$(LD_LIBBUSYBOX) \
-	$(LD_LIBBUSYBOX).$(MAJOR_VERSION) \
-	$(LD_LIBBUSYBOX).$(MAJOR_VERSION).$(MINOR_VERSION)
-endif # CONFIG_BUILD_LIBBUSYBOX
-
-ifeq ($(strip $(CONFIG_BUILD_AT_ONCE)),y)
-ifneq ($(strip $(CONFIG_FEATURE_SHARED_BUSYBOX)),y)
-# --combine but not linking against libbusybox, so compile all
-BUSYBOX_SRC   := $(LIBRARY_SRC)
-BUSYBOX_DEFINE:= $(LIBRARY_DEFINE)
-endif # !CONFIG_FEATURE_SHARED_BUSYBOX
-$(LIBBUSYBOX_SONAME): $(LIBRARY_SRC)
-else # CONFIG_BUILD_AT_ONCE
-$(LIBBUSYBOX_SONAME): $(libbusybox-obj)
-endif # CONFIG_BUILD_AT_ONCE
-
-ifeq ($(strip $(CONFIG_FEATURE_SHARED_BUSYBOX)),y)
-LDBUSYBOX:=-L$(top_builddir) -lbusybox
-endif
-
-ifeq ($(strip $(CONFIG_BUILD_LIBBUSYBOX)),y)
-$(LIBBUSYBOX_SONAME):
-ifndef MAJOR_VERSION
-	$(error MAJOR_VERSION needed for $@ is not defined)
-endif
-	$(do_link.so) \
-	-Wl,-soname=$(LD_LIBBUSYBOX).$(MAJOR_VERSION) \
-	-Wl,-z,combreloc
-	@rm -f $(DO_INSTALL_LIBS)
-	@for i in $(DO_INSTALL_LIBS); do ln -s $(@) $$i ; done
-	$(do_strip)
-
-endif # ifeq ($(strip $(CONFIG_BUILD_LIBBUSYBOX)),y)
-
-busybox_unstripped: .depend $(LIBBUSYBOX_SONAME) $(BUSYBOX_SRC) $(APPLET_SRC) $(libraries-y)
+stablebox_unstripped: .depend $(BUSYBOX_SRC) $(APPLET_SRC) $(libraries-y)
 	$(do_link)
 
-busybox: busybox_unstripped
-	$(Q)cp busybox_unstripped busybox
+stablebox: stablebox_unstripped
+	$(Q)cp stablebox_unstripped stablebox
 	$(do_strip)
 
 %.bflt: %_unstripped
 	$(do_elf2flt)
 
-busybox.links: $(top_srcdir)/applets/busybox.mkll include/bb_config.h $(top_srcdir)/include/applets.h
+stablebox.links: $(top_srcdir)/applets/busybox.mkll include/bb_config.h $(top_srcdir)/include/applets.h
 	$(Q)-$(SHELL) $^ >$@
 
-install: $(top_srcdir)/applets/install.sh busybox busybox.links
-	$(Q)DO_INSTALL_LIBS="$(strip $(LIBBUSYBOX_SONAME) $(DO_INSTALL_LIBS))" \
+install: $(top_srcdir)/applets/install.sh stablebox stablebox.links
+	$(Q)DO_INSTALL_LIBS="$(strip $(DO_INSTALL_LIBS))" \
 		$(SHELL) $< $(PREFIX) $(INSTALL_OPTS)
 ifeq ($(strip $(CONFIG_FEATURE_SUID)),y)
 	@echo
 	@echo
 	@echo --------------------------------------------------
-	@echo You will probably need to make your busybox binary
+	@echo You will probably need to make your stablebox binary
 	@echo setuid root to ensure all configured applets will
 	@echo work properly.
 	@echo --------------------------------------------------
 	@echo
 endif
 
-uninstall: busybox.links
-	rm -f $(PREFIX)/bin/busybox
-	for i in `cat busybox.links` ; do rm -f $(PREFIX)$$i; done
-ifneq ($(strip $(DO_INSTALL_LIBS)),n)
-	for i in $(LIBBUSYBOX_SONAME) $(DO_INSTALL_LIBS); do \
-		rm -f $(PREFIX)$$i; \
-	done
-endif
-
-check test: busybox
+check test: stablebox
 	bindir=$(top_builddir) srcdir=$(top_srcdir)/testsuite SED="$(SED)" \
 	$(SHELL) $(top_srcdir)/testsuite/runtest $(CHECK_VERBOSE)
 
@@ -377,50 +294,17 @@ checkhelp:
 	$(Q)$(top_srcdir)/scripts/checkhelp.awk \
 		$(wildcard $(patsubst %,%/Config.in,$(SRC_DIRS) ./))
 
-sizes: busybox_unstripped
+sizes: stablebox_unstripped
 	$(NM) --size-sort $(<)
 
-bloatcheck: busybox_old busybox_unstripped
-	@$(top_srcdir)/scripts/bloat-o-meter busybox_old busybox_unstripped
+bloatcheck: stablebox_old stablebox_unstripped
+	@$(top_srcdir)/scripts/bloat-o-meter stablebox_old stablebox_unstripped
 
-baseline: busybox_unstripped
-	@mv busybox_unstripped busybox_old
+baseline: stablebox_unstripped
+	@mv stablebox_unstripped stablebox_old
 
-objsizes: busybox_unstripped
+objsizes: stablebox_unstripped
 	$(SHELL) $(top_srcdir)/scripts/objsizes
-
-# Documentation Targets
-doc: docs/busybox.pod docs/BusyBox.txt docs/BusyBox.1 docs/BusyBox.html
-
-docs/busybox.pod : $(top_srcdir)/docs/busybox_header.pod $(top_srcdir)/include/usage.h $(top_srcdir)/docs/busybox_footer.pod $(top_srcdir)/docs/autodocifier.pl
-	$(disp_doc)
-	$(Q)-mkdir -p docs
-	$(Q)-( cat $(top_srcdir)/docs/busybox_header.pod ; \
-	    $(top_srcdir)/docs/autodocifier.pl $(top_srcdir)/include/usage.h ; \
-	    cat $(top_srcdir)/docs/busybox_footer.pod ; ) > docs/busybox.pod
-
-docs/BusyBox.txt: docs/busybox.pod
-	$(disp_doc)
-	$(Q)-mkdir -p docs
-	$(Q)-pod2text $< > $@
-
-docs/BusyBox.1: docs/busybox.pod
-	$(disp_doc)
-	$(Q)-mkdir -p docs
-	$(Q)-pod2man --center=BusyBox --release="version $(VERSION)" \
-		$< > $@
-
-docs/BusyBox.html: docs/busybox.net/BusyBox.html
-	$(disp_doc)
-	$(Q)-mkdir -p docs
-	$(Q)-rm -f docs/BusyBox.html
-	$(Q)-cp docs/busybox.net/BusyBox.html docs/BusyBox.html
-
-docs/busybox.net/BusyBox.html: docs/busybox.pod
-	$(Q)-mkdir -p docs/busybox.net
-	$(Q)-pod2html --noindex $< > \
-	    docs/busybox.net/BusyBox.html
-	$(Q)-rm -f pod2htm*
 
 # The nifty new dependency stuff
 scripts/bb_mkdep: $(top_srcdir)/scripts/bb_mkdep.c
@@ -469,13 +353,9 @@ include/bb_config.h: .config
 
 clean:
 	- $(MAKE) -C scripts/config $@
-	- rm -f docs/busybox.dvi docs/busybox.ps \
-	    docs/busybox.pod docs/busybox.net/busybox.html \
-	    docs/busybox pod2htm* *.gdb *.elf *~ core .*config.log \
-	    docs/BusyBox.txt docs/BusyBox.1 docs/BusyBox.html \
-	    docs/busybox.net/BusyBox.html busybox.links \
-	    libbusybox.so* \
-	    .config.old busybox busybox_unstripped \
+	- rm -f pod2htm* *.gdb *.elf *~ core .*config.log \
+	    stablebox.links \
+	    .config.old stablebox stablebox_unstripped \
 	    include/usage_compressed.h scripts/usage
 	- rm -r -f _install testsuite/links
 	- find . -name .\*.flags -o -name \*.o  -o -name \*.om -o -name \*.syn \
@@ -488,7 +368,7 @@ distclean: clean
 	rm -f .hdepend
 	rm -f .config .config.old .config.cmd
 
-release: distclean #doc
+release: distclean
 	cd ..; \
 	rm -r -f $(PROG)-$(VERSION); \
 	cp -a stablebox $(PROG)-$(VERSION); \

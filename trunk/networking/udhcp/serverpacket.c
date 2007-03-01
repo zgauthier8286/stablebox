@@ -130,7 +130,7 @@ int sendOffer(struct dhcpMessage *oldpacket)
 		packet.yiaddr = lease->yiaddr;
 
 	/* Or the client has a requested ip */
-	} else if ((req = get_option(oldpacket, DHCP_REQUESTED_IP)) &&
+	} else if ((req = get_option(oldpacket, DHCP_REQUESTED_IP, 0)) &&
 
 		   /* Don't look here (ugly hackish thing to do) */
 		   memcpy(&req_align, req, 4) &&
@@ -166,7 +166,7 @@ int sendOffer(struct dhcpMessage *oldpacket)
 		return -1;
 	}
 
-	if ((lease_time = get_option(oldpacket, DHCP_LEASE_TIME))) {
+	if ((lease_time = get_option(oldpacket, DHCP_LEASE_TIME, 0))) {
 		memcpy(&lease_time_align, lease_time, 4);
 		lease_time_align = ntohl(lease_time_align);
 		if (lease_time_align > server_config.lease)
@@ -223,7 +223,7 @@ int sendACK(struct dhcpMessage *oldpacket, uint32_t yiaddr)
 	init_packet(&packet, oldpacket, DHCPACK);
 	packet.yiaddr = yiaddr;
 
-	if ((lease_time = get_option(oldpacket, DHCP_LEASE_TIME))) {
+	if ((lease_time = get_option(oldpacket, DHCP_LEASE_TIME, 0))) {
 		memcpy(&lease_time_align, lease_time, 4);
 		lease_time_align = ntohl(lease_time_align);
 		if (lease_time_align > server_config.lease)
