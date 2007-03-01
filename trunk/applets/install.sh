@@ -8,7 +8,7 @@ if [ -z "$prefix" ]; then
 	echo "usage: applets/install.sh DESTINATION [--symlinks/--hardlinks]"
 	exit 1;
 fi
-h=`sort busybox.links | uniq`
+h=`sort stablebox.links | uniq`
 cleanup="0"
 noclobber="0"
 case "$2" in
@@ -39,8 +39,8 @@ if [ -n "$DO_INSTALL_LIBS" ] && [ "$DO_INSTALL_LIBS" != "n" ]; then
 	done
 fi
 
-if [ "$cleanup" = "1" ] && [ -e "$prefix/bin/busybox" ]; then
-	inode=`ls -i "$prefix/bin/busybox" | awk '{print $1}'`
+if [ "$cleanup" = "1" ] && [ -e "$prefix/bin/stablebox" ]; then
+	inode=`ls -i "$prefix/bin/stablebox" | awk '{print $1}'`
 	sub_shell_it=`
 	cd "$prefix"
 	for d in usr/sbin usr/bin sbin bin ; do
@@ -54,28 +54,28 @@ if [ "$cleanup" = "1" ] && [ -e "$prefix/bin/busybox" ]; then
 	`
 fi
 
-rm -f $prefix/bin/busybox || exit 1
+rm -f $prefix/bin/stablebox || exit 1
 mkdir -p $prefix/bin || exit 1
-install -m 755 busybox $prefix/bin/busybox || exit 1
+install -m 755 stablebox $prefix/bin/stablebox || exit 1
 
 for i in $h ; do
 	appdir=`dirname $i`
 	mkdir -p $prefix/$appdir || exit 1
 	if [ "$2" = "--hardlinks" ]; then
-		bb_path="$prefix/bin/busybox"
+		bb_path="$prefix/bin/stablebox"
 	else
 		case "$appdir" in
 		/)
-			bb_path="bin/busybox"
+			bb_path="bin/stablebox"
 		;;
 		/bin)
-			bb_path="busybox"
+			bb_path="stablebox"
 		;;
 		/sbin)
-			bb_path="../bin/busybox"
+			bb_path="../bin/stablebox"
 		;;
 		/usr/bin|/usr/sbin)
-			bb_path="../../bin/busybox"
+			bb_path="../../bin/stablebox"
 		;;
 		*)
 		echo "Unknown installation directory: $appdir"
