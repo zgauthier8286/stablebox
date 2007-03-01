@@ -1,17 +1,17 @@
-# Rules.make for busybox
+# Rules.make for stablebox 
 #
 # Copyright (C) 1999-2005 by Erik Andersen <andersen@codepoet.org>
 #
 # Licensed under GPLv2, see the file LICENSE in this tarball for details.
 #
 
-# Pull in the user's busybox configuration
+# Pull in the user's stablebox configuration
 ifeq ($(filter $(noconfig_targets),$(MAKECMDGOALS)),)
 -include $(top_builddir)/.config
 endif
 
 #--------------------------------------------------------
-PROG      := busybox
+PROG      := stablebox
 MAJOR_VERSION   :=1
 MINOR_VERSION   :=0
 SUBLEVEL_VERSION:=0
@@ -23,7 +23,7 @@ BUILDTIME := $(shell TZ=UTC date -u "+%Y.%m.%d-%H:%M%z")
 # With a modern GNU make(1) (highly recommended, that's what all the
 # developers use), all of the following configuration values can be
 # overridden at the command line.  For example:
-#   make CROSS=powerpc-linux- top_srcdir="$HOME/busybox" PREFIX=/mnt/app
+#   make CROSS=powerpc-linux- top_srcdir="$HOME/stablebox" PREFIX=/mnt/app
 #--------------------------------------------------------
 
 # If you are running a cross compiler, you will want to set 'CROSS'
@@ -44,7 +44,7 @@ SED           ?= sed
 BZIP2         ?= bzip2
 
 
-# What OS are you compiling busybox for?  This allows you to include
+# What OS are you compiling stablebox for?  This allows you to include
 # OS specific things, syscall overrides, etc.
 TARGET_OS=linux
 

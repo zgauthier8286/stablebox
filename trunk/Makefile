@@ -491,7 +491,7 @@ distclean: clean
 release: distclean #doc
 	cd ..; \
 	rm -r -f $(PROG)-$(VERSION); \
-	cp -a busybox $(PROG)-$(VERSION); \
+	cp -a stablebox $(PROG)-$(VERSION); \
 	\
 	find $(PROG)-$(VERSION)/ -type d \
 		-name .svn \
@@ -503,7 +503,7 @@ release: distclean #doc
 		-print \
 		-exec rm -f {} \; ; \
 	\
-	tar -cvzf $(PROG)-$(VERSION).tar.gz $(PROG)-$(VERSION)/;
+	tar -cvjf $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION)/;
 
 tags:
 	ctags -R .
