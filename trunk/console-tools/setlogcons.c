@@ -5,7 +5,7 @@
  *
  * Based on setlogcons (kbd-1.12) by Andries E. Brouwer
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <stdio.h>

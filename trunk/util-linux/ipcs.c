@@ -4,7 +4,7 @@
  * 01 Sept 2004 - Rodney Radford <rradford@mindspring.com>
  * Adapted for busybox from util-linux-2.12a.
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <stdio.h>

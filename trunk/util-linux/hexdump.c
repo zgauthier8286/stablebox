@@ -5,7 +5,7 @@
  * Copyright (c) 1989
  *	The Regents of the University of California.  All rights reserved.
  *
- * Licensed under GPLv2 or later, see file License in this tarball for details.
+ * Licensed under GPLv2, see file License in this tarball for details.
  */
 
 #include "busybox.h"

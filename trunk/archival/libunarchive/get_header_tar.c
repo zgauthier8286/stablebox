@@ -1,4 +1,4 @@
-/* Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+/* Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  *  FIXME:
  *    In privileged mode if uname and gname map to a uid and gid then use the

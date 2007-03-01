@@ -4,7 +4,7 @@
  *
  * Copyright (C) 2001 by Michael Habermann <mhabermann@gmx.de>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 /* BB_AUDIT SUSv3 N/A */

@@ -8,7 +8,7 @@
  * Nicolas Ferre <nicolas.ferre@alcove.fr> to support pre 2.1 kernels
  * (which lack the query_module() interface).
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include "busybox.h"

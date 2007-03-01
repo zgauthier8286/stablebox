@@ -13,7 +13,7 @@
  *     modified by Erik Andersen <andersen@codepoet.org> to be used
  *     in busybox.
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  * Original copyright notice states:
  *     "This program is in the Public Domain."

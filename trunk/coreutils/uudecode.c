@@ -1,7 +1,7 @@
 /*
  *  Copyright 2003, Glenn McGrath <bug1@iinet.net.au>
  *
- *  Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ *  Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  *  Based on specification from
  *  http://www.opengroup.org/onlinepubs/007904975/utilities/uuencode.html

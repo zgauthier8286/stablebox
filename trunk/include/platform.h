@@ -2,7 +2,7 @@
 /*
    Copyright 2006, Bernhard Fischer
 
-   Licensed under the GPL v2 or later, see the file LICENSE in this tarball.
+   Licensed under the GPL v2, see the file LICENSE in this tarball.
 */
 #ifndef	__PLATFORM_H
 #define __PLATFORM_H	1

@@ -16,7 +16,7 @@
  *
  * utftp:  Copyright (C) 1999 Uwe Ohse <uwe@ohse.de>
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  * ------------------------------------------------------------------------- */
 
 #include <stdio.h>

@@ -10,7 +10,7 @@
  *              Fred N. van Kempen, <waltje@uwalt.nl.mugnet.org>
  *              (derived from FvK's 'route.c     1.70    01/04/94')
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  *
  * $Id: route.c,v 1.26 2004/03/19 23:27:08 mjn3 Exp $
  *

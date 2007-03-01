@@ -10,7 +10,7 @@
     19990512 Uses Select. Charles P. Wright
     19990513 Fixes stdin stupidity and uses buffers.  Charles P. Wright
 
-    Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+    Licensed under GPLv2, see file LICENSE in this tarball for details.
 */
 
 #include <stdio.h>

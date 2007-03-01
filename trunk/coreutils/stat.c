@@ -9,7 +9,7 @@
  * Written by Michael Meskes
  * Taken from coreutils and turned into a busybox applet by Mike Frysinger
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <stdio.h>

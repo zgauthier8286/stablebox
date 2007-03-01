@@ -7,7 +7,7 @@
  * Now does proper error checking on output and returns a failure exit code
  * if one or more paths can not be resolved.
  *
- * Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
+ * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
 
 #include <limits.h>
