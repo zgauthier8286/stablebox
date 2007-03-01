@@ -48,7 +48,7 @@ and "make randconfig" (produce a random configuration).
 
 Configuring Stablebox produces a file ".config", which can be saved for future
 use.  Run "make oldconfig" to bring a .config file from an older version of
-busybox up to date.
+stablebox up to date.
 
 Installing Stablebox:
 ===================

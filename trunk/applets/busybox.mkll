@@ -1,9 +1,9 @@
 #!/bin/sh
-# Make busybox links list file.
+# Make stablebox links list file.
 
 # input $1: full path to Config.h
 # input $2: full path to applets.h
-# output (stdout): list of pathnames that should be linked to busybox
+# output (stdout): list of pathnames that should be linked to stablebox
 
 # Maintainer: Larry Doolittle <ldoolitt@recycle.lbl.gov>
 
@@ -19,6 +19,6 @@ $HOSTCC -E -DMAKE_LINKS -include $CONFIG_H $APPLETS_H |
 	if(dir=="/ROOT") dir=""
 	file=$3
 	gsub("\"","",file)
-	if (file=="busybox") next
+	if (file=="stablebox") next
 	print tolower(dir) "/" file
   }'
