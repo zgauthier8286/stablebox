@@ -28,6 +28,13 @@ static int convert(char *fn)
 {
 	FILE *in, *out;
 	int i;
+	struct stat s;
+
+	if(fn && stat(fn, &s) != 0)
+    	{
+        	bb_perror_msg("cannot stat %s", fn);
+        	return -1;
+    	}
 
 	if (fn != NULL) {
 		in = bb_xfopen(fn, "rw");
@@ -43,7 +50,7 @@ static int convert(char *fn)
 		   subsequent call to mkstemp would fail.
 		 */
 		if ((i = mkstemp(&bb_common_bufsiz1[0])) == -1
-			|| chmod(bb_common_bufsiz1, 0600) == -1) {
+			|| chmod(bb_common_bufsiz1, s.st_mode) == -1) {
 			bb_perror_nomsg_and_die();
 		}
 		out = fdopen(i, "w+");
