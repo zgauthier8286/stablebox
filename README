@@ -1,7 +1,7 @@
 Please see the LICENSE file for details on copying and usage.
 Please refer to the INSTALL file for instructions on how to build.
 
-What is busybox:
+What is stablebox:
   Stablebox is a fork of the Busybox (http://busybox.net) project after the
   1.2.2.1 release.  It is intended to reduce feature creap and flux, and
   be more stable and suited for embedded developers.
@@ -50,7 +50,7 @@ Downloading the current source code:
   Source for the latest released version, as well as daily snapshots, can always
   be downloaded from
 
-    http://busybox.net/downloads/
+    http://code.google.com/p/stablebox/downloads/list
 
   You can browse the up to the minute source code and change history online.
 
