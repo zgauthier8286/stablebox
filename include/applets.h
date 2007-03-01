@@ -1,8 +1,8 @@
 /*
- * applets.h - a listing of all busybox applets.
+ * applets.h - a listing of all stablebox applets.
  *
  * If you write a new applet, you need to add an entry to this list to make
- * busybox aware of it.
+ * stablebox aware of it.
  *
  * It is CRUCIAL that this listing be kept in ascii order, otherwise the binary
  * search lookup contributed by Gaute B Strokkenes stops working. If you value
@@ -59,7 +59,7 @@ USE_BASENAME(APPLET(basename, _BB_DIR_USR_BIN, _BB_SUID_NEVER))
 USE_BBCONFIG(APPLET(bbconfig, _BB_DIR_BIN, _BB_SUID_NEVER))
 USE_BUNZIP2(APPLET(bunzip2, _BB_DIR_USR_BIN, _BB_SUID_NEVER))
 /* Always enabled. */
-APPLET_NOUSAGE(busybox, busybox, _BB_DIR_BIN, _BB_SUID_MAYBE)
+APPLET_NOUSAGE(stablebox, stablebox, _BB_DIR_BIN, _BB_SUID_MAYBE)
 USE_BUNZIP2(APPLET_ODDNAME(bzcat, bunzip2, _BB_DIR_USR_BIN, _BB_SUID_NEVER, bzcat))
 USE_CAL(APPLET(cal, _BB_DIR_USR_BIN, _BB_SUID_NEVER))
 USE_CAT(APPLET(cat, _BB_DIR_BIN, _BB_SUID_NEVER))

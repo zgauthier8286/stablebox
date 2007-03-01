@@ -135,7 +135,7 @@ int udhcpd_main(int argc, char *argv[])
 			continue;
 		}
 
-		if ((state = get_option(&packet, DHCP_MESSAGE_TYPE)) == NULL) {
+		if ((state = get_option(&packet, DHCP_MESSAGE_TYPE, 0)) == NULL) {
 			DEBUG(LOG_ERR, "couldn't get option from packet, ignoring");
 			continue;
 		}
@@ -170,8 +170,8 @@ int udhcpd_main(int argc, char *argv[])
 		case DHCPREQUEST:
 			DEBUG(LOG_INFO, "received REQUEST");
 
-			requested = get_option(&packet, DHCP_REQUESTED_IP);
-			server_id = get_option(&packet, DHCP_SERVER_ID);
+			requested = get_option(&packet, DHCP_REQUESTED_IP, 0);
+			server_id = get_option(&packet, DHCP_SERVER_ID, 0);
 
 			if (requested) memcpy(&requested_align, requested, 4);
 			if (server_id) memcpy(&server_id_align, server_id, 4);

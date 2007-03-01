@@ -8,9 +8,9 @@
 #include "busybox.h"
 
 #ifndef BB_EXTRA_VERSION
-#define BANNER "BusyBox v" BB_VER " (" BB_BT ")"
+#define BANNER "Stablebox v" BB_VER " (" BB_BT ")"
 #else
-#define BANNER "BusyBox v" BB_VER " (" BB_EXTRA_VERSION ")"
+#define BANNER "Stablebox v" BB_VER " (" BB_EXTRA_VERSION ")"
 #endif
 
 const char BB_BANNER[]=BANNER;

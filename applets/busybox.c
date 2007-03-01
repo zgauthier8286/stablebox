@@ -1,6 +1,6 @@
 /* vi: set sw=4 ts=4: */
 /*
- * BusyBox' main applet dispatcher.
+ * Stablebox' main applet dispatcher.
  *
  * Licensed under GPLv2, see file LICENSE in this tarball for details.
  */
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 	bb_error_msg_and_die("applet not found");
 }
 
-int busybox_main(int argc, char **argv)
+int stablebox_main(int argc, char **argv)
 {
 	/*
 	 * This style of argument parsing doesn't scale well
@@ -129,11 +129,11 @@ int busybox_main(int argc, char **argv)
 			} else output_width = 60;
 
 			printf("%s\n\n"
-			       "Usage: busybox [function] [arguments]...\n"
+			       "Usage: stablebox [function] [arguments]...\n"
 			       "   or: [function] [arguments]...\n\n"
-			       "\tBusyBox is a multi-call binary that combines many common Unix\n"
+			       "\tStablebox is a multi-call binary that combines many common Unix\n"
 			       "\tutilities into a single executable.  Most people will create a\n"
-			       "\tlink to busybox for each function they wish to use and BusyBox\n"
+			       "\tlink to stablebox for each function they wish to use and Stablebox\n"
 			       "\twill act like whatever it was invoked as!\n"
 			       "\nCurrently defined functions:\n", bb_msg_full_version);
 
