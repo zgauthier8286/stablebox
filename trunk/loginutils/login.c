@@ -80,7 +80,7 @@ int login_main(int argc, char **argv)
 	int flag;
 	int failed;
 	int count=0;
-	struct passwd *pw = NULL, pw_copy;
+	struct passwd *pw, pw_copy;
 #ifdef CONFIG_WHEEL_GROUP
 	struct group *grp;
 #endif
@@ -174,30 +174,6 @@ int login_main(int argc, char **argv)
 		if ( !username[0] )
 			if(!login_prompt ( username ))
 				return EXIT_FAILURE;
-
-   		/* 
-		====================================================================
-		   THIS IS A MAJOR MODIFICATION TO ALWAYS ALLOW RESTORING DEFAULTS
-   		   NO MATTER WHAT (on a serial console).
-		   THIS KEEPS OUR EMBEDDED SYSTEM A BIT MORE ROBUST
-  		====================================================================
-		*/
-		if (!strncmp(tty, "ttyS", 4) && !strncmp(username, "restore_defaults", 16))
-		{
-			if (!strncmp(username, "restore_defaults", 16))
-			{
-				pw = &pw_copy;
-				memset(pw, 0, sizeof(pw_copy));
-				pw->pw_dir = "/";
-				pw->pw_shell = "/usr/sbin/restore_defaults";
-				// We don't care about the password, but we need to be consistent
-				pw->pw_passwd = "!";
-				(void)correct_password(pw);
-				goto auth_ok;
-			}
- 		}
-
-		/*****************************************************************/
 
 		if ( !alarmstarted && ( TIMEOUT > 0 )) {
 			alarm ( TIMEOUT );
