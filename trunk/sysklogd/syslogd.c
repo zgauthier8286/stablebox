@@ -380,16 +380,16 @@ static void RemoteLog(int pri, char *msg)
 	snprintf(line, sizeof(line), "<%d>%s", pri, msg);
 	for (i = 0; i < NumRemoteHosts; i++)
 	{ 
-		struct sockaddr_in *sin = &RemoteHosts[i].remoteaddr;
+		struct sockaddr_in *remote = &RemoteHosts[i].remoteaddr;
 		unsigned retry, delay;
 
 		if (RemoteHosts[i].remotefd == -1)
 		{
-			memset(sin, 0, sizeof(*sin));
+			memset(remote, 0, sizeof(*remote));
 			RemoteHosts[i].remotefd = bb_xsocket(AF_INET, SOCK_DGRAM, 0);
-			sin->sin_family = AF_INET;
-			sin->sin_addr = *(struct in_addr *)*(xgethostbyname(RemoteHosts[i].RemoteHost))->h_addr_list;
-			sin->sin_port = htons(RemoteHosts[i].RemotePort);
+			remote->sin_family = AF_INET;
+			remote->sin_addr = *(struct in_addr *)*(xgethostbyname(RemoteHosts[i].RemoteHost))->h_addr_list;
+			remote->sin_port = htons(RemoteHosts[i].RemotePort);
 		}
 		
 		if (RemoteHosts[i].remotefd == -1)
@@ -399,7 +399,7 @@ static void RemoteLog(int pri, char *msg)
 		{ 
 
 			if(( -1 == sendto(RemoteHosts[i].remotefd, line, strlen(line), 0,
-					  (struct sockaddr *)sin, sizeof(*sin))) && 
+					  (struct sockaddr *)remote, sizeof(*remote))) && 
 				(errno == EINTR)) 
 			{
 				sleep(delay);
