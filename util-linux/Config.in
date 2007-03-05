@@ -149,37 +149,6 @@ config CONFIG_FREERAMDISK
 	  ramdisk.  If you have no use for freeing memory from a ramdisk, leave
 	  this disabled.
 
-config CONFIG_FSCK_MINIX
-	bool "fsck_minix"
-	default n
-	help
-	  The minix filesystem is a nice, small, compact, read-write filesystem
-	  with little overhead.  It is not a journaling filesystem however and
-	  can experience corruption if it is not properly unmounted or if the
-	  power goes off in the middle of a write.  This utility allows you to
-	  check for and attempt to repair any corruption that occurs to a minix
-	  filesystem.
-
-config CONFIG_MKFS_MINIX
-	bool "mkfs_minix"
-	default n
-	help
-	  The minix filesystem is a nice, small, compact, read-write filesystem
-	  with little overhead.  If you wish to be able to create minix filesystems
-	  this utility will do the job for you.
-
-comment "Minix filesystem support"
-    depends on CONFIG_FSCK_MINIX || CONFIG_MKFS_MINIX
-
-config CONFIG_FEATURE_MINIX2
-	bool "Support Minix fs v2 (fsck_minix/mkfs_minix)"
-	default y
-	depends on CONFIG_FSCK_MINIX || CONFIG_MKFS_MINIX
-	help
-	  If you wish to be able to create version 2 minix filesystems, enable this.
-	  If you enabled 'mkfs_minix' then you almost certainly want to be using the
-	  version 2 filesystem support.
-
 config CONFIG_GETOPT
 	bool "getopt"
 	default n

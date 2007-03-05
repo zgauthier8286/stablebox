@@ -157,9 +157,6 @@ struct dnode {			/* the basic node */
 	char *fullname;		/* the dir entry name */
 	int   allocated;
 	struct stat dstat;	/* the file stat info */
-#ifdef CONFIG_SELINUX
-	security_context_t sid;
-#endif
 	struct dnode *next;	/* point at the next node */
 };
 typedef struct dnode dnode_t;
@@ -184,17 +181,9 @@ static struct dnode *my_stat(char *fullname, char *name)
 {
 	struct stat dstat;
 	struct dnode *cur;
-#ifdef CONFIG_SELINUX
-	security_context_t sid=NULL;
-#endif
 
 #ifdef CONFIG_FEATURE_LS_FOLLOWLINKS
 	if (all_fmt & FOLLOW_LINKS) {
-#ifdef CONFIG_SELINUX
-		if (is_selinux_enabled())  {
-			 getfilecon(fullname,&sid);
-		}
-#endif
 		if (stat(fullname, &dstat)) {
 			bb_perror_msg("%s", fullname);
 			status = EXIT_FAILURE;
@@ -203,11 +192,6 @@ static struct dnode *my_stat(char *fullname, char *name)
 	} else
 #endif
 	{
-#ifdef CONFIG_SELINUX
-	        if  (is_selinux_enabled())  {
-		  lgetfilecon(fullname,&sid);
-		}
-#endif
 		if (lstat(fullname, &dstat)) {
 			bb_perror_msg("%s", fullname);
 			status = EXIT_FAILURE;
@@ -219,9 +203,6 @@ static struct dnode *my_stat(char *fullname, char *name)
 	cur->fullname = fullname;
 	cur->name = name;
 	cur->dstat = dstat;
-#ifdef CONFIG_SELINUX
-	cur->sid = sid;
-#endif
 	return cur;
 }
 
@@ -435,9 +416,6 @@ static void showfiles(struct dnode **dn, int nfiles)
 		/* find the longest file name-  use that as the column width */
 		for (i = 0; i < nfiles; i++) {
 			int len = strlen(dn[i]->name) +
-#ifdef CONFIG_SELINUX
-			((all_fmt & LIST_CONTEXT) ? 33 : 0) +
-#endif
 			((all_fmt & LIST_INO) ? 8 : 0) +
 			((all_fmt & LIST_BLOCKS) ? 5 : 0);
 			if (column_width < len)
@@ -680,25 +658,6 @@ static int list_single(struct dnode *dn)
 			}
 			break;
 #endif
-#ifdef CONFIG_SELINUX
-		case LIST_CONTEXT:
-			{
-				char context[80];
-				int len = 0;
-
-				if (dn->sid) {
-				  /*  I assume sid initilized with NULL  */
-				  len = strlen(dn->sid)+1;
-				  safe_strncpy(context, dn->sid, len);
-				  freecon(dn->sid);
-				}else {
-				  safe_strncpy(context, "unknown", 8);
-				}
-				printf("%-32s ", context);
-				column += MAX(33, len);
-			}
-			break;
-#endif
 		case LIST_FILENAME:
 #ifdef CONFIG_FEATURE_LS_COLOR
 			errno = 0;
@@ -797,26 +756,19 @@ static int list_single(struct dnode *dn)
 # define LS_STR_HUMAN_READABLE	""
 #endif
 
-#ifdef CONFIG_SELINUX
-# define LS_STR_SELINUX	"K"
-#else
-# define LS_STR_SELINUX	""
-#endif
-
 #ifdef CONFIG_FEATURE_AUTOWIDTH
 # define LS_STR_AUTOWIDTH	"T:w:"
 #else
 # define LS_STR_AUTOWIDTH	""
 #endif
 
-static const char ls_options[]="Cadil1gnsxAk" \
+static const char ls_options[]="Cadil1gnsxA" \
 	LS_STR_TIMESTAMPS \
 	USE_FEATURE_LS_SORTFILES("SXrv") \
 	LS_STR_FILETYPES \
 	LS_STR_FOLLOW_LINKS \
 	LS_STR_RECURSIVE \
 	LS_STR_HUMAN_READABLE \
-	LS_STR_SELINUX \
 	LS_STR_AUTOWIDTH;
 
 #define LIST_MASK_TRIGGER	0
@@ -836,11 +788,6 @@ static const unsigned opt_flags[] = {
 	LIST_BLOCKS,				/* s */
 	DISP_ROWS,					/* x */
 	DISP_HIDDEN,				/* A */
-#ifdef CONFIG_SELINUX
-	LIST_CONTEXT,				/* k */
-#else
-	0,							/* k - ingored */
-#endif
 #ifdef CONFIG_FEATURE_LS_TIMESTAMPS
 	TIME_CHANGE | (ENABLE_FEATURE_LS_SORTFILES * SORT_CTIME),	/* c */
 	LIST_FULLTIME,				/* e */
@@ -865,9 +812,6 @@ static const unsigned opt_flags[] = {
 #endif
 #ifdef CONFIG_FEATURE_HUMAN_READABLE
 	LS_DISP_HR,					/* h */
-#endif
-#ifdef CONFIG_SELINUX
-	LIST_MODEBITS|LIST_NLINKS|LIST_CONTEXT|LIST_SIZE|LIST_DATE_TIME, /* K */
 #endif
 #ifdef CONFIG_FEATURE_AUTOWIDTH
        0, 0,                    /* T, w - ignored */

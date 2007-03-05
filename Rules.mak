@@ -293,10 +293,6 @@ ifeq ($(strip $(CONFIG_BUILD_LIBBUSYBOX)),y)
     LIB_CFLAGS+=$(CFLAGS_PIC)
 endif
 
-ifeq ($(strip $(CONFIG_SELINUX)),y)
-    LIBRARIES += -lselinux -lsepol
-endif
-
 ifeq ($(strip $(CONFIG_PAM)),y)
     LIBRARIES += -lpam -lpam_misc
 endif

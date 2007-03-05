@@ -12,13 +12,6 @@ config CONFIG_ADJTIMEX
 	  Adjtimex reads and optionally sets adjustment parameters for
 	  the Linux clock adjustment algorithm.
 
-config CONFIG_BBCONFIG
-	bool "bbconfig"
-	default n
-	help
-	  The bbconfig applet will print the config file with which
-	  busybox was built.
-
 config CONFIG_CROND
 	bool "crond"
 	default n

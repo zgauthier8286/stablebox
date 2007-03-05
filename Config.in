@@ -13,26 +13,9 @@ menu "Stablebox Settings"
 
 menu "General Configuration"
 
-config CONFIG_NITPICK
-	bool "See lots more (probably unnecessary) configuration options."
-	default n
-	help
-	  Some Stablebox applets have more configuration options than anyone
-	  will ever care about.  To avoid drowining people in complexity, most
-	  of the applet features that can be set to a sane default value are
-	  hidden, unless you hit the above switch.
-
-	  This is better than to telling people to edit the source
-	  code, but not by much.
-
-	  See http://en.wikipedia.org/wiki/Fibber_McGee_and_Molly#The_Closet
-
-	  You have been warned.
-
 choice
 	prompt "Buffer allocation policy"
-	default CONFIG_FEATURE_BUFFERS_USE_MALLOC
-	depends on CONFIG_NITPICK
+	default CONFIG_FEATURE_BUFFERS_GO_ON_STACK
 	help
 	  There are 3 ways Stablebox can handle buffer allocations:
 	  - Use malloc. This costs code size for the call to xmalloc.
@@ -75,7 +58,7 @@ config CONFIG_FEATURE_VERBOSE_USAGE
 
 config CONFIG_FEATURE_COMPRESS_USAGE
 	bool "Store applet usage messages in compressed form"
-	default y
+	default n
 	depends on CONFIG_SHOW_USAGE
 	help
 	  Store usage messages in compressed form, uncompress them on-the-fly
@@ -120,7 +103,6 @@ config CONFIG_FEATURE_DEVPTS
 config CONFIG_FEATURE_CLEAN_UP
 	bool "Clean up all memory before exiting (usually not needed)"
 	default n
-	depends on CONFIG_NITPICK
 	help
 	  As a size optimization, busybox normally exits without explicitly
 	  freeing dynamically allocated memory or closing files.  This saves
@@ -184,26 +166,6 @@ config CONFIG_FEATURE_SUID_CONFIG_QUIET
 	help
 	  /etc/stablebox.conf should be readable by the user needing the SUID, check
 	  this option to avoid users to be notified about missing permissions.
-
-config CONFIG_SELINUX
-	bool "Support NSA Security Enhanced Linux"
-	default n
-	help
-	  Enable support for SELinux in applets ls, ps, and id.  Also provide
-	  the option of compiling in SELinux applets.
-
-	  If you do not have a complete SELinux userland installed, this stuff
-	  will not compile. Go visit
-		http://www.nsa.gov/selinux/index.html
-	  to download the necessary stuff to allow busybox to compile with
-	  this option enabled. Specifially, libselinux 1.28 or better is
-	  directly required by busybox. If the installation is located in a
-	  non-standard directory, provide it by invoking make as follows:
-		CFLAGS=-I<libselinux-include-path> \
-		LDFLAGS=-L<libselinux-lib-path> \
-		make
-
-	  Most people will leave this set to 'N'.
 
 config CONFIG_BUSYBOX_EXEC_PATH
 	string "Path to BusyBox executable"
@@ -460,7 +422,6 @@ source editors/Config.in
 source findutils/Config.in
 source init/Config.in
 source loginutils/Config.in
-source e2fsprogs/Config.in
 source modutils/Config.in
 source util-linux/Config.in
 source miscutils/Config.in

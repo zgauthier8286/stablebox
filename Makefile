@@ -31,7 +31,7 @@ vpath %/Config.in $(srctree)
 DIRS:=applets archival archival/libunarchive coreutils console-tools \
 	debianutils editors findutils init miscutils modutils networking \
 	networking/libiproute networking/udhcp procps loginutils shell \
-	sysklogd util-linux e2fsprogs libpwdgrp coreutils/libcoreutils libbb
+	sysklogd util-linux libpwdgrp coreutils/libcoreutils libbb
 
 SRC_DIRS:=$(patsubst %,$(top_srcdir)/%,$(DIRS))
 
@@ -223,13 +223,13 @@ allnoconfig: scripts/config/conf
 
 defconfig: scripts/config/conf
 	@./scripts/config/conf -y $(CONFIG_CONFIG_IN) > /dev/null
-	@$(SED) -i -r -e "s/^(USING_CROSS_COMPILER|CONFIG_(DEBUG.*|STATIC|SELINUX|BUILD_(AT_ONCE|LIBBUSYBOX)|FEATURE_(DEVFS|FULL_LIBBUSYBOX|SHARED_BUSYBOX|MTAB_SUPPORT|CLEAN_UP|UDHCP_DEBUG)|INSTALL_NO_USR))=.*/# \1 is not set/" .config
+	@$(SED) -i -r -e "s/^(USING_CROSS_COMPILER|CONFIG_(DEBUG.*|STATIC|PAM|BUILD_(AT_ONCE|LIBBUSYBOX)|FEATURE_(FULL_LIBBUSYBOX|SHARED_BUSYBOX|MTAB_SUPPORT|CLEAN_UP|UDHCP_DEBUG)|INSTALL_NO_USR))=.*/# \1 is not set/" .config
 	@./scripts/config/conf -o $(CONFIG_CONFIG_IN) > /dev/null
 
 
 allbareconfig: scripts/config/conf
 	@./scripts/config/conf -y $(CONFIG_CONFIG_IN) > /dev/null
-	@$(SED) -i -r -e "s/^(USING_CROSS_COMPILER|CONFIG_(DEBUG|STATIC|SELINUX|DEVFSD|NC_GAPING_SECURITY_HOLE|BUILD_AT_ONCE)).*/# \1 is not set/" .config
+	@$(SED) -i -r -e "s/^(USING_CROSS_COMPILER|CONFIG_(DEBUG|STATIC|NC_GAPING_SECURITY_HOLE|BUILD_AT_ONCE)).*/# \1 is not set/" .config
 	@$(SED) -i -e "/FEATURE/s/=.*//;/^[^#]/s/.*FEATURE.*/# \0 is not set/;" .config
 	@echo "CONFIG_FEATURE_BUFFERS_GO_ON_STACK=y" >> .config
 	@yes n | ./scripts/config/conf -o $(CONFIG_CONFIG_IN) > /dev/null

@@ -3214,17 +3214,6 @@ static char *rexecve(char *c, char **v, char **envp)
 	REGISTER int i;
 	REGISTER char *sp, *tp;
 	int eacces = 0, asis = 0;
-	char *name = c;
-
-	if (ENABLE_FEATURE_SH_STANDALONE_SHELL) {
-		optind = 1;
-		if (find_applet_by_name(name)) {
-			/* We have to exec here since we vforked.  Running
-			 * run_applet_by_name() won't work and bad things
-			 * will happen. */
-			execve(CONFIG_BUSYBOX_EXEC_PATH, v, envp);
-		}
-	}
 
 	DBGPRINTF(("REXECVE: c=%p, v=%p, envp=%p\n", c, v, envp));
 
@@ -3342,25 +3331,6 @@ static int dohelp(struct op *t)
 			col = 0;
 		}
 	}
-#ifdef CONFIG_FEATURE_SH_STANDALONE_SHELL
-	{
-		int i;
-		const struct BB_applet *applet;
-		extern const struct BB_applet applets[];
-		extern const size_t NUM_APPLETS;
-
-		for (i = 0, applet = applets; i < NUM_APPLETS; applet++, i++) {
-			if (!applet->name)
-				continue;
-
-			col += printf("%s%s", ((col == 0) ? "\t" : " "), applet->name);
-			if (col > 60) {
-				printf("\n");
-				col = 0;
-			}
-		}
-	}
-#endif
 	printf("\n\n");
 	return EXIT_SUCCESS;
 }
