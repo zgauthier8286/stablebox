@@ -56,55 +56,6 @@ config CONFIG_DC
 	  Dc is a reverse-polish desk calculator which supports unlimited
 	  precision arithmetic.
 
-config CONFIG_DEVFSD
-	bool "devfsd (obsolete)"
-	default n
-	help
-	  This is deprecated, and will be going away in a future release.
-
-	  Provides compatibility with old device names on a devfs systems.
-	  You should set it to true if you have devfs enabled.
-	  The following keywords in devsfd.conf are supported:
-	  "CLEAR_CONFIG", "INCLUDE", "OPTIONAL_INCLUDE", "RESTORE",
-	  "PERMISSIONS", "EXECUTE", "COPY", "IGNORE",
-	  "MKOLDCOMPAT", "MKNEWCOMPAT","RMOLDCOMPAT", "RMNEWCOMPAT".
-
-	   But only if they are written UPPERCASE!!!!!!!!
-
-config CONFIG_DEVFSD_MODLOAD
-	bool "Adds support for MODLOAD keyword in devsfd.conf"
-	default n
-	depends on CONFIG_DEVFSD
-	help
-	  This actually doesn't work with busybox modutils but needs
-	  the external modutils.
-
-config CONFIG_DEVFSD_FG_NP
-	bool "Enables the -fg and -np options"
-	default n
-	depends on CONFIG_DEVFSD
-	help
-		-fg	Run the daemon in the foreground.
-		-np	Exit  after  parsing  the configuration file. Do not poll for events.
-
-config CONFIG_DEVFSD_VERBOSE
-	bool "Increases logging (and size)"
-	default n
-	depends on CONFIG_DEVFSD
-	help
-	  Increases logging to stderr or syslog.
-
-config CONFIG_FEATURE_DEVFS
-	bool "  Use devfs names for all devices (obsolete)"
-	default n
-	help
-	  This tells busybox to look for names like /dev/loop/0 instead of
-	  /dev/loop0.  If your /dev directory has normal names instead of
-	  devfs names, you don't want this.
-
-	  This is obsolete and will be going away someday.  Consider it
-	  deprecated.
-
 config CONFIG_EJECT
 	bool "eject"
 	default n
