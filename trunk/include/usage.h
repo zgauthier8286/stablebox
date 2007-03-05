@@ -1283,6 +1283,13 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t\treached.\n" \
 	"\t-h, -?\tDisplay this help message"
 
+#define llad_trivial_usage \
+	"[OPTION] ifname"
+#define llad_full_usage \
+	"Start the link-local addressing daemon\n\n" \
+	"Options:\n" \
+	"\t-r\trequest this address first"
+
 #define ln_trivial_usage \
 	"[OPTION] TARGET... LINK_NAME|DIRECTORY"
 #define ln_full_usage \
