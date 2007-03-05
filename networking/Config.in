@@ -418,6 +418,14 @@ config CONFIG_FEATURE_IPCALC_LONG_OPTIONS
 	help
 	  Support long options for the ipcalc applet.
 
+config CONFIG_LLAD
+	bool "llad"
+	default n
+	help
+	  llad (link-local address daemon) provides RFC3927 ZeroConf IPv4 
+          Link-Local addressing.  It is very similar in nature to the zcip
+	  applet provided by busybox, with some key simplifications.
+
 config CONFIG_NAMEIF
 	bool "nameif"
 	default n
