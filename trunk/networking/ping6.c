@@ -76,82 +76,6 @@ enum {
 
 static void ping(const char *host);
 
-/* simple version */
-#ifndef CONFIG_FEATURE_FANCY_PING6
-static struct hostent *h;
-
-void noresp(int ign)
-{
-	printf("No response from %s\n", h->h_name);
-	exit(EXIT_FAILURE);
-}
-
-static void ping(const char *host)
-{
-	struct sockaddr_in6 pingaddr;
-	struct icmp6_hdr *pkt;
-	int pingsock, c;
-	int sockopt;
-	char packet[DEFDATALEN + MAXIPLEN + MAXICMPLEN];
-
-	pingsock = create_icmp6_socket();
-
-	memset(&pingaddr, 0, sizeof(struct sockaddr_in));
-
-	pingaddr.sin6_family = AF_INET6;
-	h = xgethostbyname2(host, AF_INET6);
-	memcpy(&pingaddr.sin6_addr, h->h_addr, sizeof(pingaddr.sin6_addr));
-
-	pkt = (struct icmp6_hdr *) packet;
-	memset(pkt, 0, sizeof(packet));
-	pkt->icmp6_type = ICMP6_ECHO_REQUEST;
-
-	sockopt = offsetof(struct icmp6_hdr, icmp6_cksum);
-	setsockopt(pingsock, SOL_RAW, IPV6_CHECKSUM, (char *) &sockopt,
-			   sizeof(sockopt));
-
-	c = sendto(pingsock, packet, DEFDATALEN + sizeof (struct icmp6_hdr), 0,
-			   (struct sockaddr *) &pingaddr, sizeof(struct sockaddr_in6));
-
-	if (c < 0 || c != sizeof(packet))
-		bb_perror_msg_and_die("sendto");
-
-	signal(SIGALRM, noresp);
-	alarm(5);					/* give the host 5000ms to respond */
-	/* listen for replies */
-	while (1) {
-		struct sockaddr_in6 from;
-		size_t fromlen = sizeof(from);
-
-		if ((c = recvfrom(pingsock, packet, sizeof(packet), 0,
-						  (struct sockaddr *) &from, &fromlen)) < 0) {
-			if (errno == EINTR)
-				continue;
-			bb_perror_msg("recvfrom");
-			continue;
-		}
-		if (c >= 8) {			/* icmp6_hdr */
-			pkt = (struct icmp6_hdr *) packet;
-			if (pkt->icmp6_type == ICMP6_ECHO_REPLY)
-				break;
-		}
-	}
-	printf("%s is alive!\n", h->h_name);
-	return;
-}
-
-int ping6_main(int argc, char **argv)
-{
-	argc--;
-	argv++;
-	if (argc < 1)
-		bb_show_usage();
-	ping(*argv);
-	return EXIT_SUCCESS;
-}
-
-#else /* ! CONFIG_FEATURE_FANCY_PING6 */
-/* full(er) version */
 static struct sockaddr_in6 pingaddr;
 static int pingsock = -1;
 static int datalen; /* intentionally uninitialized to work around gcc bug */
@@ -162,10 +86,7 @@ static int myid, options;
 static unsigned long tmin = ULONG_MAX, tmax, tsum;
 static char rcvd_tbl[MAX_DUP_CHK / 8];
 
-# ifdef CONFIG_FEATURE_FANCY_PING
-extern
-# endif
-	struct hostent *hostent;
+extern struct hostent *hostent;
 
 static void sendping(int);
 static void pingstats(int);
@@ -488,7 +409,6 @@ int ping6_main(int argc, char **argv)
 	ping(*argv);
 	return EXIT_SUCCESS;
 }
-#endif /* ! CONFIG_FEATURE_FANCY_PING6 */
 
 /*
  * Copyright (c) 1989 The Regents of the University of California.

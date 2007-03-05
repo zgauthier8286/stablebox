@@ -153,9 +153,6 @@ int su_main ( int argc, char **argv )
 
 	change_identity ( pw );
 	setup_environment(opt_shell, flags & SU_OPT_l, !(flags & SU_OPT_p), pw);
-#if ENABLE_SELINUX
-       set_current_security_context(NULL);
-#endif
 	run_shell(opt_shell, flags & SU_OPT_l, opt_command, (const char**)opt_args);
 
 	return EXIT_FAILURE;

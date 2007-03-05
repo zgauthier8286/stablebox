@@ -18,10 +18,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#ifdef CONFIG_SELINUX
-#include <selinux/selinux.h>          /* for is_selinux_enabled() */
-#endif
-
 #define PRINT_REAL        1
 #define NAME_NOT_NUMBER   2
 #define JUST_USER         4
@@ -87,25 +83,6 @@ int id_main(int argc, char **argv)
 	putchar(' ');
 	/* bb_getgrgid doesn't exit on failure here */
 	status|=printf_full(gid, bb_getgrgid(NULL, gid, 0), 'g');
-
-#ifdef CONFIG_SELINUX
-	if ( is_selinux_enabled() ) {
-			security_context_t mysid;
-			char context[80];
-			int len = sizeof(context);
-
-			getcon(&mysid);
-			context[0] = '\0';
-			if (mysid) {
-					len = strlen(mysid)+1;
-					safe_strncpy(context, mysid, len);
-					freecon(mysid);
-			}else{
-					safe_strncpy(context, "unknown",8);
-			}
-		bb_printf(" context=%s", context);
-	}
-#endif
 
 	putchar('\n');
 	bb_fflush_stdout_and_exit(status);

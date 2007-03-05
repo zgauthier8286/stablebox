@@ -36,35 +36,6 @@
 #include <syslog.h>
 #include <ctype.h>
 #include "libbb.h"
-#ifdef CONFIG_SELINUX
-#include <selinux/selinux.h>  /* for setexeccon  */
-#endif
-
-#ifdef CONFIG_SELINUX
-static security_context_t current_sid=NULL;
-
-void
-renew_current_security_context(void)
-{
-  if  (current_sid)
-    freecon(current_sid);  /* Release old context  */
-
-  getcon(&current_sid);  /* update */
-
-  return;
-}
-void
-set_current_security_context(security_context_t sid)
-{
-  if  (current_sid)
-    freecon(current_sid);  /* Release old context  */
-
-  current_sid=sid;
-
-  return;
-}
-
-#endif
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
    If COMMAND is nonzero, pass it to the shell with the -c option.
@@ -96,12 +67,6 @@ void run_shell ( const char *shell, int loginshell, const char *command, const c
 			args [argno++] = *additional_args;
 	}
 	args [argno] = 0;
-#ifdef CONFIG_SELINUX
-	if ( (current_sid) && (!setexeccon(current_sid)) ) {
-	    freecon(current_sid);
-	    execve(shell, (char **) args, environ);
-	} else
-#endif
-	  execv ( shell, (char **) args );
+	execv ( shell, (char **) args );
 	bb_perror_msg_and_die ( "cannot run %s", shell );
 }

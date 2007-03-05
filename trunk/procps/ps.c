@@ -18,19 +18,11 @@
 #include <string.h>
 #include <termios.h>
 #include <sys/ioctl.h>
-#if ENABLE_SELINUX
-#include <selinux/selinux.h>  /* for is_selinux_enabled()  */
-#endif
 
 int ps_main(int argc, char **argv)
 {
 	procps_status_t * p;
 	int i, len;
-
-#if ENABLE_SELINUX
-	int use_selinux = 0;
-	security_context_t sid=NULL;
-#endif
 
 #if ENABLE_FEATURE_PS_WIDE
 	int terminal_width;
@@ -41,13 +33,11 @@ int ps_main(int argc, char **argv)
 # define terminal_width 79
 #endif
 
-#if ENABLE_FEATURE_PS_WIDE || ENABLE_SELINUX
+#if ENABLE_FEATURE_PS_WIDE
 	/* handle arguments */
-#if ENABLE_FEATURE_PS_WIDE && ENABLE_SELINUX
-	i = bb_getopt_ulflags(argc, argv, "wc", &w_count);
-#elif ENABLE_FEATURE_PS_WIDE && !ENABLE_SELINUX
+#if ENABLE_FEATURE_PS_WIDE
 	bb_getopt_ulflags(argc, argv, "w", &w_count);
-#else /* !ENABLE_FEATURE_PS_WIDE && ENABLE_SELINUX */
+#else
 	i = bb_getopt_ulflags(argc, argv, "c");
 #endif
 #if ENABLE_FEATURE_PS_WIDE
@@ -62,48 +52,16 @@ int ps_main(int argc, char **argv)
 		terminal_width--;
 	}
 #endif
-#if ENABLE_SELINUX
-	if ((i & (1+ENABLE_FEATURE_PS_WIDE)) && is_selinux_enabled())
-		use_selinux = 1;
-#endif
-#endif  /* ENABLE_FEATURE_PS_WIDE || ENABLE_SELINUX */
+#endif  /* ENABLE_FEATURE_PS_WIDE */
 
-#if ENABLE_SELINUX
-	if (use_selinux)
-	  printf("  PID Context                          Stat Command\n");
-	else
-#endif
-	  printf("  PID  Uid     VmSize Stat Command\n");
+	printf("  PID  Uid     VmSize Stat Command\n");
 
 	while ((p = procps_scan(1)) != 0)  {
 		char *namecmd = p->cmd;
-#if ENABLE_SELINUX
-		if (use_selinux)
-		  {
-			char sbuf[128];
-			len = sizeof(sbuf);
-
-			if (is_selinux_enabled()) {
-			  if (getpidcon(p->pid,&sid)<0)
-			    sid=NULL;
-			}
-
-			if (sid) {
-			  /*  I assume sid initilized with NULL  */
-			  len = strlen(sid)+1;
-			  safe_strncpy(sbuf, sid, len);
-			  freecon(sid);
-			  sid=NULL;
-			}else {
-			  safe_strncpy(sbuf, "unknown",7);
-			}
-			len = printf("%5d %-32s %s ", p->pid, sbuf, p->state);
-		}
-		else
-#endif
-		  if(p->rss == 0)
+		
+		if(p->rss == 0)
 		    len = printf("%5d %-8s        %s ", p->pid, p->user, p->state);
-		  else
+		else
 		    len = printf("%5d %-8s %6ld %s ", p->pid, p->user, p->rss, p->state);
 
 		i = terminal_width-len;

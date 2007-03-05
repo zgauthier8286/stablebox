@@ -97,25 +97,9 @@
 	"\t-c\tWrite output to standard output\n" \
 	"\t-f\tForce"
 
-#define stablebox_notes_usage \
-	"Hello world!\n"
-
 #define bzcat_trivial_usage \
 	"FILE"
 #define bzcat_full_usage \
-	"Uncompress to stdout."
-
-#define unlzma_trivial_usage \
-	"[OPTION]... [FILE]"
-#define unlzma_full_usage \
-	"Uncompress FILE (or standard input if FILE is '-' or omitted).\n\n" \
-	"Options:\n" \
-	"\t-c\tWrite output to standard output\n" \
-	"\t-f\tForce"
-
-#define lzmacat_trivial_usage \
-	"FILE"
-#define lzmacat_full_usage \
 	"Uncompress to stdout."
 
 #define cal_trivial_usage \
@@ -143,29 +127,6 @@
 	"\t-e\tEnd each line with $\n" \
 	"\t-t\tShow tabs as ^I\n" \
 	"\t-v\tDon't use ^x or M-x escapes."
-#define chattr_trivial_usage \
-	"[-R] [-+=AacDdijsStTu] [-v version] files..."
-#define chattr_full_usage \
-	"change file attributes on an ext2 fs\n\n" \
-	"Modifiers:\n" \
-	"\t-\tremove attributes\n" \
-	"\t+\tadd attributes\n" \
-	"\t=\tset attributes\n" \
-	"Attributes:\n" \
-	"\tA\tdon't track atime\n" \
-	"\ta\tappend mode only\n" \
-	"\tc\tenable compress\n" \
-	"\tD\twrite dir contents synchronously\n" \
-	"\td\tdo not backup with dump\n" \
-	"\ti\tcannot be modified (immutable)\n" \
-	"\tj\twrite all data to journal first\n" \
-	"\ts\tzero disk storage when deleted\n" \
-	"\tS\twrite file contents synchronously\n" \
-	"\tt\tdisable tail-merging of partial blocks with other files\n" \
-	"\tu\tallow file to be undeleted\n" \
-	"Options:\n" \
-	"\t-R\trecursively list subdirectories\n" \
-	"\t-v\tset the file's version/generation number"
 
 #define chgrp_trivial_usage \
 	"[OPTION]... GROUP FILE..."
@@ -259,11 +220,6 @@
 	"\t-2\tSuppress lines unique to FILE2\n" \
 	"\t-3\tSuppress lines common to both files"
 
-#define bbconfig_trivial_usage \
-	""
-#define bbconfig_full_usage \
-	"Print the config file which built stablebox"
-
 #define cp_trivial_usage \
 	"[OPTION]... SOURCE DEST"
 #define cp_full_usage \
@@ -312,7 +268,6 @@
 	"\t-e [user]    edit crontab for user\n" \
 	"\t-d [user]    delete crontab for user\n" \
 	"\t-c dir       specify crontab directory"
-
 
 #define cut_trivial_usage \
 	"[OPTION]... [FILE]..."
@@ -417,20 +372,6 @@ USE_FEATURE_DATE_ISOFMT( \
 #define deluser_full_usage \
 	 "Deletes user USER from the system"
 
-#define devfsd_trivial_usage \
-	"mntpnt [-v]" \
-	USE_DEVFSD_FG_NP("[-fg][-np]" )
-#define devfsd_full_usage \
-	"Optional daemon for managing devfs permissions and old device name symlinks.\n" \
-	"\nOptions:\n" \
-	"\tmntpnt\tThe mount point where devfs is mounted.\n\n" \
-	"\t-v\tPrint the protocol version numbers for devfsd\n" \
-	"\t\tand the kernel-side protocol version and exits." \
-	USE_DEVFSD_FG_NP( "\n\n\t-fg\tRun the daemon in the foreground.\n\n" \
-	"\t-np\tExit  after  parsing  the configuration file\n" \
-	"\t\tand processing synthetic REGISTER events.\n" \
-	"\t\tDo not poll for events.")
-
 #define df_trivial_usage \
 	"[-" USE_FEATURE_HUMAN_READABLE("hm") "k] [FILESYSTEM ...]"
 #define df_full_usage \
@@ -490,17 +431,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-c\t\tClears the ring buffer's contents after printing\n" \
 	"\t-n LEVEL\tSets console logging level\n" \
 	"\t-s SIZE\t\tUse a buffer of size SIZE"
-
-#define dnsd_trivial_usage \
-        "[-c config] [-t seconds] [-p port] [-i iface-ip] [-d]"
-#define dnsd_full_usage \
-        "Small and static DNS server daemon\n\n" \
-	"Options:\n" \
-	"\t-c\t\tconfig filename\n" \
-	"\t-t\t\tTTL in seconds\n" \
-	"\t-p\t\tlistening port\n" \
-	"\t-i\t\tlistening iface ip (default all)\n" \
-	"\t-d\t\tdaemonize"
 
 #define dos2unix_trivial_usage \
 	"[option] [FILE]"
@@ -581,35 +511,6 @@ USE_FEATURE_DATE_ISOFMT( \
 #define dumpkmap_example_usage \
 	"$ dumpkmap > keymap\n"
 
-#define dumpleases_trivial_usage \
-	"[-r|-a] [-f LEASEFILE]"
-#define dumpleases_full_usage \
-	"Displays the DHCP leases granted by udhcpd.\n\n" \
-	"Options:\n" \
-	"\t-f,\t--file=FILENAME\tLeases file to load\n" \
-	"\t-r,\t--remaining\tInterpret lease times as time remaining\n" \
-	"\t-a,\t--absolute\tInterpret lease times as expire time"
-
-#define e2fsck_trivial_usage \
-	"[-panyrcdfvstDFSV] [-b superblock] [-B blocksize] " \
-	"[-I inode_buffer_blocks] [-P process_inode_size] " \
-	"[-l|-L bad_blocks_file] [-C fd] [-j external_journal] " \
-	"[-E extended-options] device"
-#define e2fsck_full_usage \
-	"Check a Linux ext2/ext3 file system.\n\n" \
-	"Options:\n" \
-	"\t-p\tAutomatic repair (no questions)\n" \
-	"\t-n\tMake no changes to the filesystem\n" \
-	"\t-y\tAssume 'yes' to all questions\n" \
-	"\t-c\tCheck for bad blocks and add them to the badblock list\n" \
-	"\t-f\tForce checking even if filesystem is marked clean\n" \
-	"\t-v\tBe verbose\n" \
-	"\t-b superblock\tUse alternative superblock\n" \
-	"\t-B blocksize\tForce blocksize when looking for superblock\n" \
-	"\t-j journal\tSet location of the external journal\n" \
-	"\t-l file\tAdd to badblocks list\n" \
-	"\t-L file\tSet badblocks list"
-
 #define echo_trivial_usage \
 	USE_FEATURE_FANCY_ECHO("[-neE] ") "[ARG ...]"
 #define echo_full_usage \
@@ -636,9 +537,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	"Eject specified DEVICE (or default /dev/cdrom).\n\n" \
 	"Options:\n" \
 	"\t-t\tclose tray"
-
-#define ed_trivial_usage ""
-#define ed_full_usage ""
 
 #define env_trivial_usage \
 	"[-iu] [-] [name=value]... [command]"
@@ -736,27 +634,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	"Options:\n" \
 	"\t-n\tDon't verify after format"
 
-#define fdisk_trivial_usage \
-	"[-luv] [-C CYLINDERS] [-H HEADS] [-S SECTORS] [-b SSZ] DISK"
-#define fdisk_full_usage \
-	"Change partition table\n" \
-	"Options:\n" \
-	"\t-l  List partition table(s)\n" \
-	"\t-u  Give Start and End in sector (instead of cylinder) units\n" \
-	"\t-s PARTITION  Give partition size(s) in blocks\n" \
-	"\t-b 2048: (for certain MO disks) use 2048-byte sectors\n" \
-	"\t-C CYLINDERS  Set the number of cylinders\n" \
-	"\t-H HEADS  Set the number of heads\n" \
-	"\t-S SECTORS  Set the number of sectors\n" \
-	"\t-v  Give fdisk version"
-
-#define findfs_trivial_usage \
-	"LABEL=label or UUID=uuid"
-#define findfs_full_usage \
-	"Finds a filesystem device based on a label or UUID."
-#define findfs_example_usage \
-	"$ findfs LABEL=MyDevice"
-
 #define find_trivial_usage \
 	"[PATH...] [EXPRESSION]"
 #define find_full_usage \
@@ -783,10 +660,16 @@ USE_FEATURE_DATE_ISOFMT( \
 ) USE_FEATURE_FIND_EXEC( \
 	"\n\t-exec CMD\tExecute CMD with all instances of {} replaced by the" \
 	"\n\t\t\tfiles matching EXPRESSION")
-
 #define find_example_usage \
 	"$ find / -name passwd\n" \
 	"/etc/passwd\n"
+
+#define findfs_trivial_usage \
+	"LABEL=label or UUID=uuid"
+#define findfs_full_usage \
+	"Finds a filesystem device based on a label or UUID."
+#define findfs_example_usage \
+	"$ findfs LABEL=MyDevice"
 
 #define fold_trivial_usage \
 	"[-bs] [-w WIDTH] [FILE]"
@@ -829,19 +712,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-V\tVerbose mode\n" \
 	"\t-C\tWrite status information to specified filedescriptor\n" \
 	"\t-t\tList of filesystem types to check"
-
-#define fsck_minix_trivial_usage \
-	"[-larvsmf] /dev/name"
-#define fsck_minix_full_usage \
-	"Performs a consistency check for MINIX filesystems.\n\n" \
-	"Options:\n" \
-	"\t-l\tLists all filenames\n" \
-	"\t-r\tPerform interactive repairs\n" \
-	"\t-a\tPerform automatic repairs\n" \
-	"\t-v\tverbose\n" \
-	"\t-s\tOutputs super-block information\n" \
-	"\t-m\tActivates MINIX-like \"mode not cleared\" warnings\n" \
-	"\t-f\tForce file system check"
 
 #define ftpget_trivial_usage \
 	"[options] remote-host local-file remote-file"
@@ -951,7 +821,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	USE_FEATURE_GREP_CONTEXT("\n\t-A\tprint NUM lines of trailing context") \
 	USE_FEATURE_GREP_CONTEXT("\n\t-B\tprint NUM lines of leading context") \
 	USE_FEATURE_GREP_CONTEXT("\n\t-C\tprint NUM lines of output context")
-
 #define grep_example_usage \
 	"$ grep root /etc/passwd\n" \
 	"root:x:0:0:root:/root:/bin/bash\n" \
@@ -1129,18 +998,11 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-u\tthe hardware clock is kept in coordinated universal time\n" \
 	"\t-l\tthe hardware clock is kept in local time"
 
-#ifdef CONFIG_SELINUX
-#  define USAGE_SELINUX(a) a
-#else
-#  define USAGE_SELINUX(a)
-#endif
-
 #define id_trivial_usage \
 	"[OPTIONS]... [USERNAME]"
 #define id_full_usage \
 	"Print information for USERNAME or the current user\n\n" \
 	"Options:\n" \
-	USAGE_SELINUX("\t-c\tprints only the security context\n") \
 	"\t-g\tprints only the group ID\n" \
 	"\t-u\tprints only the user ID\n" \
 	"\t-n\tprint a name instead of a number\n" \
@@ -1233,132 +1095,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	""
 #define init_full_usage \
 	"Init is the parent of all processes."
-#define init_notes_usage \
-"This version of init is designed to be run only by the kernel.\n" \
-"\n" \
-"Stablebox init doesn't support multiple runlevels.  The runlevels field of\n" \
-"the /etc/inittab file is completely ignored by Stablebox init. If you want \n" \
-"runlevels, use sysvinit.\n" \
-"\n" \
-"Stablebox init works just fine without an inittab.  If no inittab is found, \n" \
-"it has the following default behavior:\n" \
-"\n" \
-"	::sysinit:/etc/init.d/rcS\n" \
-"	::askfirst:/bin/sh\n" \
-"	::ctrlaltdel:/sbin/reboot\n" \
-"	::shutdown:/sbin/swapoff -a\n" \
-"	::shutdown:/bin/umount -a -r\n" \
-"	::restart:/sbin/init\n" \
-"\n" \
-"if it detects that /dev/console is _not_ a serial console, it will also run:\n" \
-"\n" \
-"	tty2::askfirst:/bin/sh\n" \
-"	tty3::askfirst:/bin/sh\n" \
-"	tty4::askfirst:/bin/sh\n" \
-"\n" \
-"If you choose to use an /etc/inittab file, the inittab entry format is as follows:\n" \
-"\n" \
-"	<id>:<runlevels>:<action>:<process>\n" \
-"\n" \
-"	<id>:\n" \
-"\n" \
-"		WARNING: This field has a non-traditional meaning for Stablebox init!\n" \
-"		The id field is used by Stablebox init to specify the controlling tty for\n" \
-"		the specified process to run on.  The contents of this field are\n" \
-"		appended to \"/dev/\" and used as-is.  There is no need for this field to\n" \
-"		be unique, although if it isn't you may have strange results.  If this\n" \
-"		field is left blank, the controlling tty is set to the console.  Also\n" \
-"		note that if Stablebox detects that a serial console is in use, then only\n" \
-"		entries whose controlling tty is either the serial console or /dev/null\n" \
-"		will be run.  Stablebox init does nothing with utmp.  We don't need no\n" \
-"		stinkin' utmp.\n" \
-"\n" \
-"	<runlevels>:\n" \
-"\n" \
-"		The runlevels field is completely ignored.\n" \
-"\n" \
-"	<action>:\n" \
-"\n" \
-"		Valid actions include: sysinit, respawn, askfirst, wait,\n" \
-"		once, restart, ctrlaltdel, and shutdown.\n" \
-"\n" \
-"		The available actions can be classified into two groups: actions\n" \
-"		that are run only once, and actions that are re-run when the specified\n" \
-"		process exits.\n" \
-"\n" \
-"		Run only-once actions:\n" \
-"\n" \
-"			'sysinit' is the first item run on boot.  init waits until all\n" \
-"			sysinit actions are completed before continuing.  Following the\n" \
-"			completion of all sysinit actions, all 'wait' actions are run.\n" \
-"			'wait' actions, like  'sysinit' actions, cause init to wait until\n" \
-"			the specified task completes.  'once' actions are asynchronous,\n" \
-"			therefore, init does not wait for them to complete.  'restart' is\n" \
-"			the action taken to restart the init process.  By default this should\n" \
-"			simply run /sbin/init, but can be a script which runs pivot_root or it\n" \
-"			can do all sorts of other interesting things.  The 'ctrlaltdel' init\n" \
-"			actions are run when the system detects that someone on the system\n" \
-"                       console has pressed the CTRL-ALT-DEL key combination.  Typically one\n" \
-"                       wants to run 'reboot' at this point to cause the system to reboot.\n" \
-"			Finally the 'shutdown' action specifies the actions to taken when\n" \
-"                       init is told to reboot.  Unmounting filesystems and disabling swap\n" \
-"                       is a very good here\n" \
-"\n" \
-"		Run repeatedly actions:\n" \
-"\n" \
-"			'respawn' actions are run after the 'once' actions.  When a process\n" \
-"			started with a 'respawn' action exits, init automatically restarts\n" \
-"			it.  Unlike sysvinit, Stablebox init does not stop processes from\n" \
-"			respawning out of control.  The 'askfirst' actions acts just like\n" \
-"			respawn, except that before running the specified process it\n" \
-"			displays the line \"Please press Enter to activate this console.\"\n" \
-"			and then waits for the user to press enter before starting the\n" \
-"			specified process.\n" \
-"\n" \
-"		Unrecognized actions (like initdefault) will cause init to emit an\n" \
-"		error message, and then go along with its business.  All actions are\n" \
-"		run in the order they appear in /etc/inittab.\n" \
-"\n" \
-"	<process>:\n" \
-"\n" \
-"		Specifies the process to be executed and its command line.\n" \
-"\n" \
-"Example /etc/inittab file:\n" \
-"\n" \
-"	# This is run first except when booting in single-user mode.\n" \
-"	#\n" \
-"	::sysinit:/etc/init.d/rcS\n" \
-"	\n" \
-"	# /bin/sh invocations on selected ttys\n" \
-"	#\n" \
-"	# Start an \"askfirst\" shell on the console (whatever that may be)\n" \
-"	::askfirst:-/bin/sh\n" \
-"	# Start an \"askfirst\" shell on /dev/tty2-4\n" \
-"	tty2::askfirst:-/bin/sh\n" \
-"	tty3::askfirst:-/bin/sh\n" \
-"	tty4::askfirst:-/bin/sh\n" \
-"	\n" \
-"	# /sbin/getty invocations for selected ttys\n" \
-"	#\n" \
-"	tty4::respawn:/sbin/getty 38400 tty4\n" \
-"	tty5::respawn:/sbin/getty 38400 tty5\n" \
-"	\n" \
-"	\n" \
-"	# Example of how to put a getty on a serial line (for a terminal)\n" \
-"	#\n" \
-"	#::respawn:/sbin/getty -L ttyS0 9600 vt100\n" \
-"	#::respawn:/sbin/getty -L ttyS1 9600 vt100\n" \
-"	#\n" \
-"	# Example how to put a getty on a modem line.\n" \
-"	#::respawn:/sbin/getty 57600 ttyS2\n" \
-"	\n" \
-"	# Stuff to do when restarting the init process\n" \
-"	::restart:/sbin/init\n" \
-"	\n" \
-"	# Stuff to do before rebooting\n" \
-"	::ctrlaltdel:/sbin/reboot\n" \
-"	::shutdown:/bin/umount -a -r\n" \
-"	::shutdown:/sbin/swapoff -a\n"
 
 #ifdef CONFIG_FEATURE_INSMOD_LOAD_MAP
 #  define USAGE_INSMOD_MAP(a) a
@@ -1518,6 +1254,11 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-c n\tSets the default log level of console messages to n\n" \
 	"\t-n\tRun as a foreground process"
 
+#define last_trivial_usage \
+	""
+#define last_full_usage \
+	"Shows listing of the last users that logged into the system"
+
 #define length_trivial_usage \
 	"STRING"
 #define length_full_usage \
@@ -1541,13 +1282,6 @@ USE_FEATURE_DATE_ISOFMT( \
 	"\t-~\tSuppress ~s displayed when input past the end of the file is\n" \
 	"\t\treached.\n" \
 	"\t-h, -?\tDisplay this help message"
-
-#define setarch_trivial_usage \
-	"<personality> <program> [args ...]"
-#define setarch_full_usage \
-	"Personality may be:\n" \
-	"\tlinux32\tSet 32bit uname emulation\n" \
-	"\tlinux64\tSet 64bit uname emulation"
 
 #define ln_trivial_usage \
 	"[OPTION] TARGET... LINK_NAME|DIRECTORY"
@@ -1666,7 +1400,7 @@ USE_FEATURE_DATE_ISOFMT( \
 #endif
 
 #define ls_trivial_usage \
-	"[-1Aa" USAGE_LS_TIMESTAMPS("c") "Cd" USAGE_LS_TIMESTAMPS("e") USAGE_LS_FILETYPES("F") "iln" USAGE_LS_FILETYPES("p") USAGE_LS_FOLLOWLINKS("L") USAGE_LS_RECURSIVE("R") USAGE_LS_SORTFILES("rS") "s" USAGE_AUTOWIDTH("T") USAGE_LS_TIMESTAMPS("tu") USAGE_LS_SORTFILES("v") USAGE_AUTOWIDTH("w") "x" USAGE_LS_SORTFILES("X") USE_FEATURE_HUMAN_READABLE("h") "k" USAGE_SELINUX("K") "] [filenames...]"
+	"[-1Aa" USAGE_LS_TIMESTAMPS("c") "Cd" USAGE_LS_TIMESTAMPS("e") USAGE_LS_FILETYPES("F") "iln" USAGE_LS_FILETYPES("p") USAGE_LS_FOLLOWLINKS("L") USAGE_LS_RECURSIVE("R") USAGE_LS_SORTFILES("rS") "s" USAGE_AUTOWIDTH("T") USAGE_LS_TIMESTAMPS("tu") USAGE_LS_SORTFILES("v") USAGE_AUTOWIDTH("w") "x" USAGE_LS_SORTFILES("X") USE_FEATURE_HUMAN_READABLE("h") "k""] [filenames...]"
 #define ls_full_usage \
 	"List directory contents\n\n" \
 	"Options:\n" \
@@ -1697,24 +1431,16 @@ USE_FEATURE_DATE_ISOFMT( \
 	USAGE_LS_SORTFILES("\t-X\tsort the listing by extension\n") \
 	USE_FEATURE_HUMAN_READABLE( \
 	"\t-h\tprint sizes in human readable format (e.g., 1K 243M 2G )\n") \
-	USAGE_SELINUX("\t-k\tprint security context\n") \
-	USAGE_SELINUX("\t-K\tprint security context in long format\n")
-
-#define lsattr_trivial_usage \
-	"[-Radlv] [files...]"
-#define lsattr_full_usage \
-	"list file attributes on an ext2 fs\n\n" \
-	"Options:\n" \
-	"\t-R\trecursively list subdirectories\n" \
-	"\t-a\tdo not hide entries starting with .\n" \
-	"\t-d\tlist directory entries instead of contents\n" \
-	"\t-l\tprint long flag names\n" \
-	"\t-v\tlist the file's version/generation number"
 
 #define lsmod_trivial_usage \
 	""
 #define lsmod_full_usage \
 	"List the currently loaded kernel modules."
+
+#define lzmacat_trivial_usage \
+	"FILE"
+#define lzmacat_full_usage \
+	"Uncompress to stdout."
 
 #ifdef CONFIG_FEATURE_MAKEDEVS_LEAF
 #define makedevs_trivial_usage \
@@ -1847,37 +1573,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	"$ mkdir /tmp/foo/bar/baz\n" \
 	"/tmp/foo/bar/baz: No such file or directory\n" \
 	"$ mkdir -p /tmp/foo/bar/baz\n"
-
-#define mke2fs_trivial_usage \
-	"[-c|-l filename] [-b block-size] [-f fragment-size] [-g blocks-per-group] " \
-	"[-i bytes-per-inode] [-j] [-J journal-options] [-N number-of-inodes] [-n] " \
-	"[-m reserved-blocks-percentage] [-o creator-os] [-O feature[,...]] [-q] " \
-	"[r fs-revision-level] [-E extended-options] [-v] [-F] [-L volume-label] " \
-	"[-M last-mounted-directory] [-S] [-T filesystem-type] " \
-	"device [blocks-count]"
-#define mke2fs_full_usage \
-	"\t-b size\tblock size in bytes\n" \
-	"\t-c\tcheck for bad blocks before creating\n" \
-	"\t-E opts\tset extended options\n" \
-	"\t-f size\tfragment size in bytes\n" \
-	"\t-F\tforce (ignore sanity checks)\n" \
-	"\t-g num\tnumber of blocks in a block group\n" \
-	"\t-i ratio\tthe bytes/inode ratio\n" \
-	"\t-j\tcreate a journal (ext3)\n" \
-	"\t-J opts\tset journal options (size/device)\n" \
-	"\t-l file\tread bad blocks list from file\n" \
-	"\t-L lbl\tset the volume label\n" \
-	"\t-m percent\tpercent of fs blocks to reserve for admin\n" \
-	"\t-M dir\tset last mounted directory\n" \
-	"\t-n\tdo not actually create anything\n" \
-	"\t-N num\tnumber of inodes to create\n" \
-	"\t-o os\tset the 'creator os' field\n" \
-	"\t-O features\tdir_index/filetype/has_journal/journal_dev/sparse_super\n" \
-	"\t-q\tquiet execution\n" \
-	"\t-r rev\tset filesystem revision\n" \
-	"\t-S\twrite superblock and group descriptors only\n" \
-	"\t-T fs-type\tset usage type (news/largefile/largefile4)\n" \
-	"\t-v\tverbose execution"
 
 #define mkfifo_trivial_usage \
 	"[OPTIONS] name"
@@ -2238,7 +1933,6 @@ USE_FEATURE_MDEV_CONFIG( \
 
 #define pidof_trivial_usage \
 	"process-name [OPTION] [process-name ...]"
-
 #define pidof_full_usage \
 	"Lists the PIDs of all processes with names that match the\n" \
 	"names on the command line.\n" \
@@ -2252,10 +1946,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	USAGE_FEATURE_PIDOF_OMIT("$ pidof /bin/sh\n20351 5973 5950\n") \
 	USAGE_FEATURE_PIDOF_OMIT("$ pidof /bin/sh -o %PPID\n20351 5950")
 
-#ifndef CONFIG_FEATURE_FANCY_PING
-#define ping_trivial_usage "host"
-#define ping_full_usage    "Send ICMP ECHO_REQUEST packets to network hosts"
-#else
 #define ping_trivial_usage \
 	"[OPTION]... host"
 #define ping_full_usage \
@@ -2265,7 +1955,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	"\t-s SIZE\t\tSend SIZE data bytes in packets (default=56)\n" \
 	"\t-q\t\tQuiet mode, only displays output at start\n" \
 	"\t\t\tand when finished"
-#endif
 #define ping_example_usage \
 	"$ ping localhost\n" \
 	"PING slag (127.0.0.1): 56 data bytes\n" \
@@ -2275,10 +1964,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	"1 packets transmitted, 1 packets received, 0% packet loss\n" \
 	"round-trip min/avg/max = 20.1/20.1/20.1 ms\n"
 
-#ifndef CONFIG_FEATURE_FANCY_PING6
-#define ping6_trivial_usage "host"
-#define ping6_full_usage    "Send ICMP ECHO_REQUEST packets to network hosts"
-#else
 #define ping6_trivial_usage \
 	"[OPTION]... host"
 #define ping6_full_usage \
@@ -2288,7 +1973,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	"\t-s SIZE\t\tSend SIZE data bytes in packets (default=56)\n" \
 	"\t-q\t\tQuiet mode, only displays output at start\n" \
 	"\t\t\tand when finished"
-#endif
 #define ping6_example_usage \
 	"$ ping6 ip6-localhost\n" \
 	"PING ip6-localhost (::1): 56 data bytes\n" \
@@ -2328,7 +2012,7 @@ USE_FEATURE_MDEV_CONFIG( \
 	"$ printf \"Val=%d\\n\" 5\n" \
 	"Val=5\n"
 
-#if !defined CONFIG_SELINUX && !ENABLE_FEATURE_PS_WIDE
+#if !ENABLE_FEATURE_PS_WIDE
 #define USAGE_PS "\n\tThis version of ps accepts no options."
 #else
 #define USAGE_PS "\nOptions:"
@@ -2344,7 +2028,6 @@ USE_FEATURE_MDEV_CONFIG( \
 #define ps_full_usage \
 	"Report process status\n" \
 	USAGE_PS \
-	USAGE_SELINUX("\n\t-c\tshow SE Linux context") \
 	USAGE_PS_WIDE("\n\tw\twide output")
 
 #define ps_example_usage \
@@ -2467,7 +2150,6 @@ USE_FEATURE_MDEV_CONFIG( \
 #  define USAGE_ROUTE_IPV6(a) "\t"
 #endif
 
-
 #define route_trivial_usage \
 	"[{add|del|delete}]"
 #define route_full_usage \
@@ -2536,7 +2218,6 @@ USE_FEATURE_MDEV_CONFIG( \
 	"script to interpret. All remaining arguments are names of input files; if no\n" \
 	"input files are specified, then the standard input is read.  Source files\n" \
 	"will not be modified unless -i option is given."
-
 #define sed_example_usage \
 	"$ echo \"foo\" | sed -e 's/f[a-zA-Z]o/bar/g'\n" \
 	"bar\n"
@@ -2550,6 +2231,13 @@ USE_FEATURE_MDEV_CONFIG( \
 	"\tLAST\n" \
 	"\tFIRST\tLAST\n" \
 	"\tFIRST\tINCREMENT\tLAST"
+
+#define setarch_trivial_usage \
+	"<personality> <program> [args ...]"
+#define setarch_full_usage \
+	"Personality may be:\n" \
+	"\tlinux32\tSet 32bit uname emulation\n" \
+	"\tlinux64\tSet 64bit uname emulation"
 
 #define setconsole_trivial_usage \
 	"[-r|--reset] [DEVICE]"
@@ -2578,25 +2266,6 @@ USE_FEATURE_MDEV_CONFIG( \
 #define setsid_full_usage \
 	"Runs any program in a new session by calling setsid() before\n" \
 	"exec'ing the rest of its arguments.  See setsid(2) for details."
-
-#define lash_trivial_usage \
-	"[FILE]...\n" \
-	"or: sh -c command [args]..."
-#define lash_full_usage \
-	"The stablebox LAme SHell (command interpreter)"
-#define lash_notes_usage \
-	"This command does not yet have proper documentation.\n\n" \
-	"Use lash just as you would use any other shell.  It properly handles pipes,\n" \
-	"redirects, job control, can be used as the shell for scripts, and has a\n" \
-	"sufficient set of builtins to do what is needed.  It does not (yet) support\n" \
-	"Bourne Shell syntax.  If you need things like \"if-then-else\", \"while\", and such\n" \
-	"use ash or bash.  If you just need a very simple and extremely small shell,\n" \
-	"this will do the job."
-
-#define last_trivial_usage \
-	""
-#define last_full_usage \
-	"Shows listing of the last users that logged into the system"
 
 #define sha1sum_trivial_usage \
 	"[OPTION] [FILEs...]" \
@@ -2760,7 +2429,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"  %t   Type in hex\n" \
 	"  %T   Type in human readable form\n" \
 	)
-
 #define strings_trivial_usage \
 	"[-afo] [-n length] [file ... ]"
 #define strings_full_usage \
@@ -2835,7 +2503,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 #define sync_full_usage \
 	"Write all buffered filesystem blocks to disk."
 
-
 #ifdef CONFIG_FEATURE_ROTATE_LOGFILE
 #  define USAGE_ROTATE_LOGFILE(a) a
 #else
@@ -2890,7 +2557,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 #define syslogd_example_usage \
 	"$ syslogd -R masterlog:514\n" \
 	"$ syslogd -R 192.168.1.1:601\n"
-
 
 #ifndef CONFIG_FEATURE_FANCY_TAIL
 #  define USAGE_UNSIMPLE_TAIL(a)
@@ -3079,6 +2745,7 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	USAGE_TFTP_BS( \
 	"\n\t-b SIZE\tTransfer blocks of SIZE octets" \
 	)
+
 #define time_trivial_usage \
 	"[OPTION]... COMMAND [ARGS...]"
 #define time_full_usage \
@@ -3148,7 +2815,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"\t\t(default 3 sec)\n" \
 	"\t-g\tSpecify a loose source route gateway (8 maximum)"
 
-
 #define true_trivial_usage \
 	""
 #define true_full_usage \
@@ -3167,16 +2833,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 #define tty_example_usage \
 	"$ tty\n" \
 	"/dev/tty2\n"
-
-#define tune2fs_trivial_usage \
-	"[-c max-mounts-count] [-e errors-behavior] [-g group] " \
-	"[-i interval[d|m|w]] [-j] [-J journal-options] [-l] [-s sparse-flag] " \
-	"[-m reserved-blocks-percent] [-o [^]mount-options[,...]] " \
-	"[-r reserved-blocks-count] [-u user] [-C mount-count] " \
-	"[-L volume-label] [-M last-mounted-dir] [-O [^]feature[,...]] " \
-	"[-T last-check-time] [-U UUID] device"
-#define tune2fs_full_usage \
-	"Adjust filesystem options on ext[23] filesystems."
 
 #define udhcpc_trivial_usage \
 	"[-Cfbnoqtv] [-c CID] [-V VCLS] [-H HOSTNAME] [-i INTERFACE]\n[-p pidfile] [-r IP] [-s script]"
@@ -3199,12 +2855,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"\t-S,\t--servername=SERVERNAME\tSpecify a DHCP server name.  The client will ignore all other servers\n" \
 	"\t-t,\t--retries=NUM\tSend up to NUM request packets\n"\
 	"\t-v,\t--version\tDisplay version"
-
-#define udhcpd_trivial_usage \
-	"[configfile]\n" \
-
-#define udhcpd_full_usage \
-	""
 
 #ifdef CONFIG_FEATURE_MOUNT_FORCE
 #  define USAGE_MOUNT_FORCE(a) a
@@ -3274,6 +2924,14 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"Options:\n" \
 	"\t-u\toutput will be in UNIX format\n" \
 	"\t-d\toutput will be in DOS format"
+
+#define unlzma_trivial_usage \
+	"[OPTION]... [FILE]"
+#define unlzma_full_usage \
+	"Uncompress FILE (or standard input if FILE is '-' or omitted).\n\n" \
+	"Options:\n" \
+	"\t-c\tWrite output to standard output\n" \
+	"\t-f\tForce"
 
 #define unzip_trivial_usage \
 	"[-opts[modifiers]] file[.zip] [list] [-x xlist] [-d exdir]"
@@ -3434,7 +3092,6 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 #define USAGE_XARGS_ZERO_TERM(a)
 #endif
 
-
 #define xargs_trivial_usage \
 	"[COMMAND] [OPTIONS] [ARGS...]"
 #define xargs_full_usage \
@@ -3458,15 +3115,5 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"FILE"
 #define zcat_full_usage \
 	"Uncompress to stdout."
-
-#define zcip_trivial_usage \
-	"[OPTIONS] ifname script"
-#define zcip_full_usage \
-	"zcip manages a ZeroConf IPv4 link-local address.\n" \
-	"Options:\n" \
-	"\t-f              foreground mode\n" \
-	"\t-q              quit after address (no daemon)\n" \
-	"\t-r 169.254.x.x  request this address first\n" \
-	"\t-v              verbose"
 
 #endif /* __BB_USAGE_H__ */

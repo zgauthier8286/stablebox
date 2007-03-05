@@ -15,12 +15,6 @@
 #include <time.h>
 
 #include "busybox.h"
-#ifdef CONFIG_SELINUX
-#include <selinux/selinux.h>  /* for is_selinux_enabled()  */
-#include <selinux/get_context_list.h> /* for get_default_context() */
-#include <selinux/flask.h> /* for security class definitions  */
-#include <errno.h>
-#endif
 
 #if ENABLE_PAM
 #include <security/pam_appl.h>
@@ -88,12 +82,9 @@ int login_main(int argc, char **argv)
 	int opt_fflag = 0;
 	char *opt_host = 0;
 	int alarmstarted = 0;
-#ifdef CONFIG_SELINUX
-	security_context_t user_sid = NULL;
-#endif
 #if ENABLE_PAM
-    pam_handle_t *pamh;
-    int pamret;
+	pam_handle_t *pamh;
+	int pamret;
 #endif
 
 	username[0]=0;
@@ -288,33 +279,6 @@ auth_ok:
 	else
 		safe_strncpy ( full_tty, tty, sizeof( full_tty ) - 1 );
 
-#ifdef CONFIG_SELINUX
-	if (is_selinux_enabled())
-	{
-		security_context_t old_tty_sid, new_tty_sid;
-
-		if (get_default_context(username, NULL, &user_sid))
-		{
-			fprintf(stderr, "Unable to get SID for %s\n", username);
-			exit(1);
-		}
-		if (getfilecon(full_tty, &old_tty_sid) < 0)
-		{
-			fprintf(stderr, "getfilecon(%.100s) failed: %.100s\n", full_tty, strerror(errno));
-			return EXIT_FAILURE;
-		}
-		if (security_compute_relabel(user_sid, old_tty_sid, SECCLASS_CHR_FILE, &new_tty_sid) != 0)
-		{
-			fprintf(stderr, "security_change_sid(%.100s) failed: %.100s\n", full_tty, strerror(errno));
-			return EXIT_FAILURE;
-		}
-		if(setfilecon(full_tty, new_tty_sid) != 0)
-		{
-			fprintf(stderr, "chsid(%.100s, %s) failed: %.100s\n", full_tty, new_tty_sid, strerror(errno));
-			return EXIT_FAILURE;
-		}
-	}
-#endif
 	if ( !is_my_tty ( full_tty ))
 		syslog ( LOG_ERR, "unable to determine TTY name, got %s\n", full_tty );
 
@@ -334,11 +298,6 @@ auth_ok:
 
 	if ( pw-> pw_uid == 0 )
 		syslog ( LOG_INFO, "root login %s\n", fromhost );
-#ifdef CONFIG_SELINUX
-	/* well, a simple setexeccon() here would do the job as well,
-	 * but let's play the game for now */
-	set_current_security_context(user_sid);
-#endif
 	run_shell ( tmp, 1, 0, 0);	/* exec the shell finally. */
 
 	return EXIT_FAILURE;

@@ -8,8 +8,8 @@ What is stablebox:
 
   Stablebox combines tiny versions of many common UNIX utilities into a single
   small executable.  It provides minimalist replacements for most of the
-  utilities you usually find in bzip2, coreutils, dhcp, diffutils, e2fsprogs,
-  file, findutils, gawk, grep, inetutils, less, modutils, net-tools, procps,
+  utilities you usually find in bzip2, coreutils, dhcp, diffutils, file,
+  findutils, gawk, grep, inetutils, less, modutils, net-tools, procps,
   sed, shadow, sysklogd, sysvinit, tar, util-linux, and vim.  The utilities
   in Stablebox often have fewer options than their full-featured cousins;
   however, the options that are included provide the expected functionality

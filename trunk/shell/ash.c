@@ -3693,11 +3693,7 @@ shellexec(char **argv, const char *path, int idx)
 
 	clearredir(1);
 	envp = environment();
-	if (strchr(argv[0], '/') != NULL
-#ifdef CONFIG_FEATURE_SH_STANDALONE_SHELL
-		|| find_applet_by_name(argv[0])
-#endif
-						) {
+	if (strchr(argv[0], '/') != NULL) {
 		tryexec(argv[0], argv, envp);
 		e = errno;
 	} else {
@@ -3736,14 +3732,6 @@ static void
 tryexec(char *cmd, char **argv, char **envp)
 {
 	int repeated = 0;
-#ifdef CONFIG_FEATURE_SH_STANDALONE_SHELL
-	if(find_applet_by_name(cmd) != NULL) {
-		/* re-exec ourselves with the new arguments */
-		execve(CONFIG_BUSYBOX_EXEC_PATH,argv,envp);
-		/* If they called chroot or otherwise made the binary no longer
-		 * executable, fall through */
-	}
-#endif
 
 repeat:
 #ifdef SYSV
@@ -3909,14 +3897,6 @@ find_command(char *name, struct cmdentry *entry, int act, const char *path)
 		entry->cmdtype = CMDNORMAL;
 		return;
 	}
-
-#ifdef CONFIG_FEATURE_SH_STANDALONE_SHELL
-	if (find_applet_by_name(name)) {
-		entry->cmdtype = CMDNORMAL;
-		entry->u.index = -1;
-		return;
-	}
-#endif
 
 	updatetbl = (path == pathval());
 	if (!updatetbl) {
@@ -11881,21 +11861,6 @@ static int helpcmd(int argc, char **argv)
 			col = 0;
 		}
 	}
-#ifdef CONFIG_FEATURE_SH_STANDALONE_SHELL
-	{
-		extern const struct BB_applet applets[];
-		extern const size_t NUM_APPLETS;
-
-		for (i = 0; i < NUM_APPLETS; i++) {
-
-			col += out1fmt("%c%s", ((col == 0) ? '\t' : ' '), applets[i].name);
-			if (col > 60) {
-				out1fmt("\n");
-				col = 0;
-			}
-		}
-	}
-#endif
 	out1fmt("\n\n");
 	return EXIT_SUCCESS;
 }
@@ -13657,15 +13622,6 @@ static arith_t arith (const char *expr, int *perrcode)
     }
 }
 #endif /* CONFIG_ASH_MATH_SUPPORT */
-
-
-#ifdef DEBUG
-const char *bb_applet_name = "debug stuff usage";
-int main(int argc, char **argv)
-{
-	return ash_main(argc, argv);
-}
-#endif
 
 /*-
  * Copyright (c) 1989, 1991, 1993, 1994

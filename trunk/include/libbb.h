@@ -31,10 +31,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-#ifdef CONFIG_SELINUX
-#include <selinux/selinux.h>
-#endif
-
 #include "pwd_.h"
 #include "grp_.h"
 #ifdef CONFIG_FEATURE_SHADOWPASSWDS
@@ -459,10 +455,6 @@ extern void bb_do_delay(int seconds);
 extern void change_identity ( const struct passwd *pw );
 extern const char *change_identity_e2str ( const struct passwd *pw );
 extern void run_shell ( const char *shell, int loginshell, const char *command, const char **additional_args);
-#ifdef CONFIG_SELINUX
-extern void renew_current_security_context(void);
-extern void set_current_security_context(security_context_t sid);
-#endif
 extern int run_parts(char **args, const unsigned char test_mode, char **env);
 extern int restricted_shell ( const char *shell );
 extern void setup_environment ( const char *shell, int loginshell, int changeenv, const struct passwd *pw );

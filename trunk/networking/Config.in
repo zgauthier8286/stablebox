@@ -18,12 +18,6 @@ config CONFIG_ARPING
 	help
 	  Ping hosts by ARP packets
 
-config CONFIG_DNSD
-	bool "dnsd"
-	default n
-	help
-	  Small and static DNS server daemon. 
-
 config CONFIG_ETHER_WAKE
 	bool "ether-wake"
 	default n
@@ -333,7 +327,6 @@ config CONFIG_FEATURE_INETD_RPC
 	help
 	  Suuport Sun-RPC based services
 
-
 config CONFIG_IP
 	bool "ip"
 	default n
@@ -473,28 +466,12 @@ config CONFIG_PING
 	  ping uses the ICMP protocol's mandatory ECHO_REQUEST datagram to
 	  elicit an ICMP ECHO_RESPONSE from a host or gateway.
 
-config CONFIG_FEATURE_FANCY_PING
-	bool "Enable fancy ping output"
-	default y
-	depends on CONFIG_PING
-	help
-	  Make the output from the ping applet include statistics, and at the
-	  same time provide full support for ICMP packets.
-
 config CONFIG_PING6
 	bool "ping6"
 	default n
 	depends on CONFIG_FEATURE_IPV6
 	help
 	  This will give you a ping that can talk IPv6.
-
-config CONFIG_FEATURE_FANCY_PING6
-	bool "Enable fancy ping6 output"
-	default y
-	depends on CONFIG_PING6
-	help
-	  Make the output from the ping6 applet include statistics, and at the
-	  same time provide full support for ICMP packets.
 
 config CONFIG_ROUTE
 	bool "route"
@@ -609,15 +586,6 @@ config CONFIG_FEATURE_TFTP_BLOCKSIZE
 	help
 	  Allow the client to specify the desired block size for transfers.
 
-config CONFIG_DEBUG_TFTP
-	bool "Enable debug"
-	default n
-	depends on CONFIG_TFTP
-	help
-	  Enable debug settings for tftp.  This is useful if you're running
-	  into problems with tftp as the protocol doesn't help you much when
-	  you run into problems.
-
 config CONFIG_TRACEROUTE
 	bool "traceroute"
 	default n
@@ -689,16 +657,5 @@ config CONFIG_FEATURE_WGET_LONG_OPTIONS
 	depends on CONFIG_WGET && CONFIG_GETOPT_LONG
 	help
 	  Support long options for the wget applet.
-
-config CONFIG_ZCIP
-	bool "zcip"
-	default n
-	help
-	  ZCIP provides ZeroConf IPv4 address selection, according to RFC 3927.
-	  It's a daemon that allocates and defends a dynamically assigned
-	  address on the 169.254/16 network, requiring no system administrator.
-
-	  See http://www.zeroconf.org for further details, and "zcip.script"
-	  in the busybox examples.
 
 endmenu
