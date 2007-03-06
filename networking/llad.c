@@ -190,7 +190,6 @@ int llad_main(int argc, char **argv)
 	unsigned nprobes = 0;
 	unsigned nclaims = 0;
 	int t;
-	char *why;
 	struct ifreq ifr;
 	unsigned short seed[3];
 	struct in_addr ip = {0};
