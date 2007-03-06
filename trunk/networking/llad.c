@@ -191,6 +191,8 @@ int llad_main(int argc, char **argv)
 	unsigned nclaims = 0;
 	int t;
 	char *why;
+	struct ifreq ifr;
+	unsigned short seed[3];
 	struct in_addr ip = {0};
 	char physical_intf[IFNAMSIZ] = {0}, *tmp;
 
@@ -223,46 +225,42 @@ int llad_main(int argc, char **argv)
 
 	tmp = strrchr(intf, ':');
 	if (tmp)
-		safe_strncpy(physical_intf, intf, tmp - intf);
+		safe_strncpy(physical_intf, intf, tmp - intf + 1);
 	else
 		safe_strncpy(physical_intf, intf, IFNAMSIZ);
-	
 	memset(&saddr, 0, sizeof (saddr));
 	safe_strncpy(saddr.sa_data, physical_intf, sizeof (saddr.sa_data));
 	bb_xbind(fd, &saddr, sizeof (saddr));
 
+	// get the interface's ethernet address
+	memset(&ifr, 0, sizeof (ifr));
+	safe_strncpy(ifr.ifr_name, physical_intf, sizeof(ifr.ifr_name));
+	if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0) 
 	{
-		struct ifreq ifr;
-		unsigned short seed[3];
-
-		// get the interface's ethernet address
-		memset(&ifr, 0, sizeof (ifr));
-		safe_strncpy(ifr.ifr_name, physical_intf, sizeof (ifr.ifr_name));
-		if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0) 
-		{
-			why = "get ethernet address";
-			goto fail;
-		}
-		memcpy(addr.ether_addr_octet, ifr.ifr_hwaddr.sa_data, ETH_ALEN);
-
-		// start with some stable ip address, either a function of
-		// the hardware address or else the last address we used.
-		// NOTE: the sequence of addresses we try changes only
-		// depending on when we detect conflicts.
-		memcpy(seed, ifr.ifr_hwaddr.sa_data, ETH_ALEN);
-		(void)seed48(seed);
-		if (ip.s_addr == 0)
-			pick(&ip);
+		syslog(LOG_ERR, "%s - %s", intf, strerror(errno));
+		return EXIT_FAILURE;
 	}
+	memcpy(addr.ether_addr_octet, ifr.ifr_hwaddr.sa_data, ETH_ALEN);
 
-	// run the dynamic address negotiation protocol,
-	// restarting after address conflicts:
-	//  - start with some address we want to try
-	//  - short random delay
-	//  - arp probes to see if another host else uses it
-	//  - arp announcements that we're claiming it
-	//  - use it
-	//  - defend it, within limits
+	/* start with some stable ip address, either a function of
+		the hardware address or else the last address we used.
+		NOTE: the sequence of addresses we try changes only
+		depending on when we detect conflicts.
+	*/
+	memcpy(seed, ifr.ifr_hwaddr.sa_data, ETH_ALEN);
+	(void)seed48(seed);
+	if (ip.s_addr == 0)
+		pick(&ip);
+
+	/* run the dynamic address negotiation protocol,
+	   restarting after address conflicts:
+	  - start with some address we want to try
+	  - short random delay
+	  - arp probes to see if another host else uses it
+	  - arp announcements that we're claiming it
+	  - use it
+	  - defend it, within limits
+	*/
 	for (;;)
 	{
 		struct pollfd fds[1];
@@ -478,7 +476,5 @@ int llad_main(int argc, char **argv)
 				break;
 		}
 	}
-fail:
-	syslog(LOG_ERR, "%s - %s error: %s", intf, why, strerror(errno));
-	return EXIT_FAILURE;
+	return EXIT_SUCCESS;
 }
