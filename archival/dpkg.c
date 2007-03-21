@@ -605,11 +605,9 @@ fill_package_struct_cleanup:
 		return(-1);
 	}
 	num = search_package_hashtable(new_node->name, new_node->version, VER_EQUAL);
-	if (package_hashtable[num] == NULL) {
-		package_hashtable[num] = new_node;
-	} else {
+	if (package_hashtable[num] != NULL)
 		free_package(new_node);
-	}
+	package_hashtable[num] = new_node;
 	return(num);
 }
 
