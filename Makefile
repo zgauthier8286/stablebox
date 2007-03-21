@@ -266,6 +266,14 @@ stablebox: stablebox_unstripped
 	$(Q)cp stablebox_unstripped stablebox
 	$(do_strip)
 
+ifdef DESTDIR
+INSTALLDIR=$(DESTDIR)
+endif
+
+ifndef INSTALLDIR
+INSTALLDIR=$(CONFIG_PREFIX)
+endif
+
 %.bflt: %_unstripped
 	$(do_elf2flt)
 
@@ -274,13 +282,13 @@ stablebox.links: $(top_srcdir)/applets/busybox.mkll include/bb_config.h $(top_sr
 
 install: $(top_srcdir)/applets/install.sh stablebox stablebox.links
 	$(Q)DO_INSTALL_LIBS="$(strip $(DO_INSTALL_LIBS))" \
-		$(SHELL) $< $(PREFIX) $(INSTALL_OPTS)
+		$(SHELL) $< $(INSTALLDIR) $(INSTALL_OPTS)
 ifeq ($(strip $(CONFIG_FEATURE_SUID)),y)
 	@echo
 	@echo
 	@echo --------------------------------------------------
-	@echo You will probably need to make your stablebox binary
-	@echo setuid root to ensure all configured applets will
+	@echo You need to make your stablebox binary setuid root 
+	@echo to ensure all configured applets will
 	@echo work properly.
 	@echo --------------------------------------------------
 	@echo
