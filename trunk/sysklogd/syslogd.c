@@ -563,7 +563,7 @@ static void doSyslogd(void)
 	}
 #endif
 
-	logMessage(LOG_SYSLOG | LOG_INFO, "syslogd started: " "BusyBox v" BB_VER );
+	logMessage(LOG_SYSLOG | LOG_INFO, "syslogd started");
 
 	for (;;) {
 
