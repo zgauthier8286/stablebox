@@ -42,6 +42,15 @@ config CONFIG_FEATURE_REMOTE_LOG
 	  measure to prevent system logs from being tampered with
 	  by an intruder.
 
+config CONFIG_FEATURE_REMOTE_LOG_IPV6
+	bool "Remote Log IPv6 Support"
+	default n
+	depends on CONFIG_SYSLOGD && CONFIG_FEATURE_REMOTE_LOG && CONFIG_FEATURE_IPV6 
+	help
+	  Enabling this feature allows the remote syslogd code to
+	  use IPv6 sockets.  This allows for sending syslog messages
+	  to either IPv4 or IPv6 hosts.
+
 config CONFIG_FEATURE_IPC_SYSLOG
 	bool "Circular Buffer support"
 	default n
@@ -88,7 +97,6 @@ config CONFIG_FEATURE_LOGREAD_REDUCED_LOCKING
 config CONFIG_KLOGD
 	bool "klogd"
 	default n
-	depends on CONFIG_SYSLOGD
 	help
 	  klogd is a utility which intercepts and logs all
 	  messages from the Linux kernel and sends the messages

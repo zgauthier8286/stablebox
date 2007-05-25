@@ -4407,15 +4407,14 @@ out:
 static int
 typecmd(int argc, char **argv)
 {
-	int i;
-	int err = 0;
+	int i = 1;
+	int err = 0, verbose = 1;
 
-	for (i = 1; i < argc; i++) {
-#ifdef CONFIG_ASH_CMDCMD
-		err |= describe_command(argv[i], 1);
-#else
-		err |= describe_command(argv[i]);
-#endif
+	if (*argv[1] == '-')
+		i++, verbose = 0;
+
+	for ( ; i < argc; i++) {
+		err |= describe_command(argv[i], verbose);
 	}
 	return err;
 }

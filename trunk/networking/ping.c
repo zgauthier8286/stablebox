@@ -80,7 +80,7 @@ static struct sockaddr_in pingaddr;
 static int pingsock = -1;
 static int datalen; /* intentionally uninitialized to work around gcc bug */
 
-static long ntransmitted, nreceived, nrepeats, pingcount;
+static long ntransmitted = 0, nreceived, nrepeats, pingcount;
 static int myid, options;
 static unsigned long tmin = ULONG_MAX, tmax, tsum;
 static char rcvd_tbl[MAX_DUP_CHK / 8];

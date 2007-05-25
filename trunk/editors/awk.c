@@ -2658,7 +2658,7 @@ int awk_main(int argc, char **argv)
 		rsm->F = stdfiles[i];
 	}
 
-	for (envp=environ; *envp; envp++) {
+	for (envp=environ; envp && *envp; envp++) {
 		s = bb_xstrdup(*envp);
 		s1 = strchr(s, '=');
 		if (!s1) {
