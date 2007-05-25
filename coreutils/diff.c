@@ -1228,7 +1228,7 @@ int diff_main(int argc, char **argv)
 
 	context = 3;		/* This is the default number of lines of context. */
 	if (cmd_flags & FLAG_U) {
-		context = bb_xgetlarg(U_opt);
+		context = bb_xgetlarg(U_opt, 10, INT_MIN, INT_MAX);
 	}
 	argc -= optind;
 	argv += optind;

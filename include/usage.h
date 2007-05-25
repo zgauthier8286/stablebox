@@ -2564,6 +2564,7 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 #define syslogd_example_usage \
 	"$ syslogd -R masterlog:514\n" \
 	"$ syslogd -R 192.168.1.1:601\n"
+	"$ syslogd -R fe01::1:601\n"
 
 #ifndef CONFIG_FEATURE_FANCY_TAIL
 #  define USAGE_UNSIMPLE_TAIL(a)

@@ -32,6 +32,10 @@
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/param.h>
+#ifdef CONFIG_FEATURE_REMOTE_LOG_IPV6
+#include "resolv6.h"
+
+#endif
 
 /* SYSLOG_NAMES defined to pull some extra junk from syslog.h */
 #define SYSLOG_NAMES
@@ -73,7 +77,11 @@ typedef struct RemoteHost_s {
 	char *RemoteHost;
 	int RemotePort;
 	int remotefd;
+#ifdef CONFIG_FEATURE_REMOTE_LOG_IPV6
+	struct sockaddr_in6 remoteaddr;
+#else
 	struct sockaddr_in remoteaddr;
+#endif
 } RemoteHost_t;
 static int NumRemoteHosts;
 static RemoteHost_t RemoteHosts[MAX_REMOTE_HOSTS];
@@ -380,16 +388,28 @@ static void RemoteLog(int pri, char *msg)
 	snprintf(line, sizeof(line), "<%d>%s", pri, msg);
 	for (i = 0; i < NumRemoteHosts; i++)
 	{ 
-		struct sockaddr_in *remote = &RemoteHosts[i].remoteaddr;
+#ifdef CONFIG_FEATURE_REMOTE_LOG_IPV6
+		struct sockaddr_in6 *remote;
+#else
+		struct sockaddr_in *remote;
+#endif
 		unsigned retry, delay;
 
+		remote = &RemoteHosts[i].remoteaddr;
 		if (RemoteHosts[i].remotefd == -1)
 		{
 			memset(remote, 0, sizeof(*remote));
+#ifdef CONFIG_FEATURE_REMOTE_LOG_IPV6
+			RemoteHosts[i].remotefd = bb_xsocket(AF_INET6, SOCK_DGRAM, 0);
+			remote->sin6_family = AF_INET6;
+			remote->sin6_port = htons(RemoteHosts[i].RemotePort);
+			(void)ResolveAddress(RemoteHosts[i].RemoteHost, RESOLVE_ANY, 0, &remote->sin6_addr); 
+#else
 			RemoteHosts[i].remotefd = bb_xsocket(AF_INET, SOCK_DGRAM, 0);
 			remote->sin_family = AF_INET;
-			remote->sin_addr = *(struct in_addr *)*(xgethostbyname(RemoteHosts[i].RemoteHost))->h_addr_list;
 			remote->sin_port = htons(RemoteHosts[i].RemotePort);
+			remote->sin_addr = *(struct in_addr *)*(xgethostbyname(RemoteHosts[i].RemoteHost))->h_addr_list;
+#endif
 		}
 		
 		if (RemoteHosts[i].remotefd == -1)
@@ -629,7 +649,7 @@ int syslogd_main(int argc, char **argv)
 #ifdef CONFIG_FEATURE_REMOTE_LOG
 		case 'R':
 			RemoteHosts[NumRemoteHosts].RemoteHost = bb_xstrdup(optarg);
-			if ((p = strchr(RemoteHosts[NumRemoteHosts].RemoteHost, ':'))) {
+			if ((p = strrchr(RemoteHosts[NumRemoteHosts].RemoteHost, ':'))) {
 				RemoteHosts[NumRemoteHosts].RemotePort = atoi(p + 1);
 				*p = '\0';
 			}

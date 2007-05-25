@@ -52,7 +52,8 @@ TARGET_OS=linux
 LC_ALL:= C
 
 # This must bind late because srcdir is reset for every source subdirectory.
-INCS:=-I$(top_builddir)/include -I$(top_srcdir)/include
+INCS:=-I$(top_builddir)/include -I$(top_srcdir)/include \
+-I$(top_srcdir)/networking/libresolv6
 CFLAGS=$(INCS) -I$(srcdir) -D_GNU_SOURCE
 CFLAGS+=$(CHECKED_CFLAGS)
 ARFLAGS=cru
