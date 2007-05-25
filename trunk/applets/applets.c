@@ -18,9 +18,8 @@
 #include <assert.h>
 
 #if ENABLE_STATIC && defined(__GLIBC__) && !defined(__UCLIBC__)
-#warning Static linking against glibc produces buggy executables
-#warning See sources.redhat.com/bugzilla/show_bug.cgi?id=3400
-#warning Note that glibc is utterly unsuitable for static linking anyway.
+#error Static linking against glibc is not supported. Link dynamically or get uClibc 
+#error (or dietlibc or klibc...your small, static, standard library of choice). 
 #endif
 
 #if ENABLE_SHOW_USAGE && !ENABLE_FEATURE_COMPRESS_USAGE
