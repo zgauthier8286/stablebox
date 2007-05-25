@@ -392,7 +392,7 @@ release: distclean
 		-print \
 		-exec rm -f {} \; ; \
 	\
-	tar -cvjf $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION)/;
+	tar -cjf $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION)/;
 
 tags:
 	ctags -R .
