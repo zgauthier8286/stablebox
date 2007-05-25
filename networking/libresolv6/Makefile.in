@@ -1,0 +1,24 @@
+LIBRESOLV6_AR:=libresolv6.a
+ifndef $(LIBRESOLV6_DIR)
+LIBRESOLV6_DIR:=$(top_builddir)/networking/libresolv6
+endif
+srcdir=$(top_srcdir)/networking/libresolv6
+
+LIBRESOLV6-y:= resolve.o
+
+LIBRESOLV6_SRC-y:=$(patsubst %,$(srcdir)/%,$(subst .o,.c,$(LIBRESOLV6-y)))
+LIBRESOLV6_SRC-a:=$(wildcard $(srcdir)/*.c)
+LIBRARY_SRC-y+=$(LIBRESOLV6_SRC-y)
+LIBRARY_SRC-a+=$(LIBRESOLV6_SRC-a)
+
+LIBRESOLV6-obj:=$(LIBRESOLV6_DIR)/$(LIBRESOLV6_AR)
+
+ifneq ($(strip $(LIBRESOLV6-y)),)
+libraries-y+=$(LIBRESOLV6_DIR)/$(LIBRESOLV6_AR)
+endif
+
+$(LIBRESOLV6_DIR)/$(LIBRESOLV6_AR): $(patsubst %,$(LIBRESOLV6_DIR)/%,$(LIBRESOLV6-y))
+	$(do_ar)
+
+$(LIBRESOLV6_DIR)/%.o: $(srcdir)/%.c
+	$(compile.c)
