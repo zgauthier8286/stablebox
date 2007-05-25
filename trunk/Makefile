@@ -382,17 +382,12 @@ release: distclean
 	rm -r -f $(PROG)-$(VERSION); \
 	cp -a stablebox $(PROG)-$(VERSION); \
 	\
-	find $(PROG)-$(VERSION)/ -type d \
-		-name .svn \
-		-print \
-		-exec rm -r -f {} \; ; \
-	\
 	find $(PROG)-$(VERSION)/ -type f \
 		-name .\#* \
 		-print \
 		-exec rm -f {} \; ; \
 	\
-	tar -cjf $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION)/;
+	tar --exclude=.svn -cjf $(PROG)-$(VERSION).tar.bz2 $(PROG)-$(VERSION)/;
 
 tags:
 	ctags -R .
