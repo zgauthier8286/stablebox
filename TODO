@@ -1,1 +1,3 @@
 *Complete switching naming from busybox to stablebox
+
+*Add dependency checking in KConfig for libresolv6
