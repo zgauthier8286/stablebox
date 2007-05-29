@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "resolv6.h"
 #include "busybox.h"
 
 
@@ -134,12 +135,18 @@ static char *tftp_option_get(char *buf, int len, const char * const option)
 
 #endif
 
-static int tftp(const int cmd, const struct hostent *host,
+static int tftp(const int cmd, const char *dest,
 		   const char *remotefile, const int localfd,
 		   const unsigned short port, int tftp_bufsize)
 {
+#ifdef CONFIG_FEATURE_IPV6
+	struct sockaddr_in6 sa;
+	struct sockaddr_in6 from;
+#else
 	struct sockaddr_in sa;
 	struct sockaddr_in from;
+	struct hostent *host;
+#endif
 	struct timeval tv;
 	socklen_t fromlen;
 	fd_set rfds;
@@ -158,7 +165,11 @@ static int tftp(const int cmd, const struct hostent *host,
 	 * size varies meaning BUFFERS_GO_ON_STACK would fail */
 	char *buf=xmalloc(tftp_bufsize += 4);
 
-	if ((socketfd = socket(PF_INET, SOCK_DGRAM, 0)) < 0) {
+#ifdef CONFIG_FEATURE_IPV6
+	if ((socketfd = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+#else
+	if ((socketfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+#endif
 		/* need to unlink the localfile, so don't use bb_xsocket here. */
 		bb_perror_msg("socket");
 		return EXIT_FAILURE;
@@ -169,10 +180,17 @@ static int tftp(const int cmd, const struct hostent *host,
 	memset(&sa, 0, len);
 	bb_xbind(socketfd, (struct sockaddr *)&sa, len);
 
-	sa.sin_family = host->h_addrtype;
+#ifdef CONFIG_FEATURE_IPV6
+	sa.sin6_family = AF_INET6; 
+	sa.sin6_port = port;
+	(void)ResolveAddress(dest, RESOLVE_ANY, 0, &sa.sin6_addr); 
+#else
+	sa.sin_family = AF_INET;
 	sa.sin_port = port;
+	host = xgethostbyname(dest);
 	memcpy(&sa.sin_addr, (struct in_addr *) host->h_addr,
 		   sizeof(sa.sin_addr));
+#endif
 
 	/* build opcode */
 	if (cmd & tftp_cmd_get) {
@@ -314,12 +332,21 @@ static int tftp(const int cmd, const struct hostent *host,
 
 				timeout = 0;
 
+#ifdef CONFIG_FEATURE_IPV6
+				if (sa.sin6_port == port) {
+					sa.sin6_port = from.sin6_port;
+				}
+				if (sa.sin6_port == from.sin6_port) {
+					break;
+				}
+#else
 				if (sa.sin_port == port) {
 					sa.sin_port = from.sin_port;
 				}
 				if (sa.sin_port == from.sin_port) {
 					break;
 				}
+#endif
 
 				/* fall-through for bad packets! */
 				/* discard the packet - treat as timeout */
@@ -470,7 +497,6 @@ static int tftp(const int cmd, const struct hostent *host,
 
 int tftp_main(int argc, char **argv)
 {
-	struct hostent *host = NULL;
 	const char *localfile = NULL;
 	const char *remotefile = NULL;
 	int port;
@@ -553,17 +579,16 @@ int tftp_main(int argc, char **argv)
 		bb_perror_msg_and_die("local file");
 	}
 
-	host = xgethostbyname(argv[optind]);
 	port = bb_lookup_port(argv[optind + 1], "udp", 69);
 
 #ifdef CONFIG_DEBUG_TFTP
 	fprintf(stderr, "using server \"%s\", remotefile \"%s\", "
 			"localfile \"%s\".\n",
-			inet_ntoa(*((struct in_addr *) host->h_addr)),
+		 	argv[optind],	
 			remotefile, localfile);
 #endif
 
-	result = tftp(cmd, host, remotefile, fd, port, blocksize);
+	result = tftp(cmd, argv[optind], remotefile, fd, port, blocksize);
 
 	if (!(fd == STDOUT_FILENO || fd == STDIN_FILENO)) {
 		if (ENABLE_FEATURE_CLEAN_UP)
