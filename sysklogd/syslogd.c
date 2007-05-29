@@ -403,7 +403,7 @@ static void RemoteLog(int pri, char *msg)
 			RemoteHosts[i].remotefd = bb_xsocket(AF_INET6, SOCK_DGRAM, 0);
 			remote->sin6_family = AF_INET6;
 			remote->sin6_port = htons(RemoteHosts[i].RemotePort);
-			(void)ResolveAddress(RemoteHosts[i].RemoteHost, RESOLVE_ANY, 0, &remote->sin6_addr); 
+			(void)ResolveAddress(RemoteHosts[i].RemoteHost, RESOLVE_ANY, 0, &remote->sin6_addr);
 #else
 			RemoteHosts[i].remotefd = bb_xsocket(AF_INET, SOCK_DGRAM, 0);
 			remote->sin_family = AF_INET;
@@ -649,12 +649,7 @@ int syslogd_main(int argc, char **argv)
 #ifdef CONFIG_FEATURE_REMOTE_LOG
 		case 'R':
 			RemoteHosts[NumRemoteHosts].RemoteHost = bb_xstrdup(optarg);
-			if ((p = strrchr(RemoteHosts[NumRemoteHosts].RemoteHost, ':'))) {
-				RemoteHosts[NumRemoteHosts].RemotePort = atoi(p + 1);
-				*p = '\0';
-			}
-			else
-				RemoteHosts[NumRemoteHosts].RemotePort = DEFAULT_SYSLOG_PORT;
+			RemoteHosts[NumRemoteHosts].RemotePort = DEFAULT_SYSLOG_PORT;
 			RemoteHosts[NumRemoteHosts].remotefd = -1;
 			NumRemoteHosts++;
 			break;
