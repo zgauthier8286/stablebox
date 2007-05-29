@@ -272,7 +272,7 @@ INSTALLDIR=$(DESTDIR)
 endif
 
 ifndef INSTALLDIR
-INSTALLDIR=$(CONFIG_PREFIX)
+INSTALLDIR=$(PREFIX)
 endif
 
 %.bflt: %_unstripped
