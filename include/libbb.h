@@ -325,6 +325,7 @@ extern struct hostent *xgethostbyname2(const char *name, int af);
 extern int create_icmp_socket(void);
 extern int create_icmp6_socket(void);
 extern int xconnect(struct sockaddr_in *s_addr);
+extern int xconnect2(struct sockaddr_in6 *s_addr);
 extern unsigned short bb_lookup_port(const char *port, const char *protocol, unsigned short default_port);
 extern void bb_lookup_host(struct sockaddr_in *s_in, const char *host);
 
