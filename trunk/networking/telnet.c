@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include "resolv6.h"
 #include "busybox.h"
 
 #if 0
@@ -609,7 +610,11 @@ static void cookmode(void)
 int telnet_main(int argc, char** argv)
 {
 	int len;
+#ifdef CONFIG_FEATURE_IPV6
+	struct sockaddr_in6 s_in;
+#else
 	struct sockaddr_in s_in;
+#endif
 #ifdef USE_POLL
 	struct pollfd ufds[2];
 #else
@@ -642,19 +647,38 @@ int telnet_main(int argc, char** argv)
 		autologin = getenv("USER");
 
 	if (optind < argc) {
+#ifdef CONFIG_FEATURE_IPV6
+		memset(&s_in, 0, sizeof(s_in));
+		s_in.sin6_family = AF_INET6;
+		(void)ResolveAddress(argv[optind++], RESOLVE_ANY, 0, &s_in.sin6_addr);
+		s_in.sin6_port = bb_lookup_port((optind < argc) ? argv[optind++] :
+				"telnet", "tcp", 23);
+#else
 		bb_lookup_host(&s_in, argv[optind++]);
 		s_in.sin_port = bb_lookup_port((optind < argc) ? argv[optind++] :
 				"telnet", "tcp", 23);
+#endif
 		if (optind < argc)
 			bb_show_usage();
 	} else
 		bb_show_usage();
 #else
+#ifdef CONFIG_FEATURE_IPV6
+	memset(&s_in, 0, sizeof(s_in));
+	s_in.sin6_family = AF_INET6;
+	(void)ResolveAddress(argv[1], RESOLVE_ANY, 0, s_in.sin6_addr);
+	s_in.sin6_port = bb_lookup_port((argc == 3) ? argv[2] : "telnet", "tcp", 23);
+#else
 	bb_lookup_host(&s_in, argv[1]);
 	s_in.sin_port = bb_lookup_port((argc == 3) ? argv[2] : "telnet", "tcp", 23);
 #endif
+#endif
 
+#ifdef CONFIG_FEATURE_IPV6
+	G.netfd = xconnect2(&s_in);
+#else
 	G.netfd = xconnect(&s_in);
+#endif
 
 	setsockopt(G.netfd, SOL_SOCKET, SO_KEEPALIVE, &one, sizeof one);
 

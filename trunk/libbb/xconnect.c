@@ -70,3 +70,16 @@ int xconnect(struct sockaddr_in *s_addr)
 	}
 	return s;
 }
+
+#ifdef CONFIG_FEATURE_IPV6
+int xconnect2(struct sockaddr_in6 *s_addr)
+{
+	int s = bb_xsocket(AF_INET6, SOCK_STREAM, 0);
+	if (connect(s, (struct sockaddr *)s_addr, sizeof(struct sockaddr_in6)) < 0)
+	{
+		if (ENABLE_FEATURE_CLEAN_UP) close(s);
+		bb_perror_msg_and_die("Unable to connect to remote host");
+	}
+	return s;
+}
+#endif

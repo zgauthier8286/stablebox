@@ -25,12 +25,17 @@
 
 #include <sys/socket.h>
 
+#include "resolv6.h"
 #include "busybox.h"
 
 typedef struct ftp_host_info_s {
 	char *user;
 	char *password;
-	struct sockaddr_in *s_in;
+//#ifdef CONFIG_FEATURE_IPV6
+	struct sockaddr_in6 s_in;
+//#else
+//	struct sockaddr_in *s_in;
+//#endif
 } ftp_host_info_t;
 
 static char verbose_flag = 0;
@@ -77,8 +82,13 @@ static int xconnect_ftpdata(ftp_host_info_t *server, const char *buf)
 	*buf_ptr = '\0';
 	port_num += atoi(buf_ptr + 1) * 256;
 
+#ifdef CONFIG_FEATURE_IPV6
+	server->s_in.sin6_port=htons(port_num);
+	return(xconnect2(&server->s_in));
+#else
 	server->s_in->sin_port=htons(port_num);
 	return(xconnect(server->s_in));
+#endif
 }
 
 static FILE *ftp_login(ftp_host_info_t *server)
@@ -87,7 +97,11 @@ static FILE *ftp_login(ftp_host_info_t *server)
 	char buf[512];
 
 	/* Connect to the command socket */
+#ifdef CONFIG_FEATURE_IPV6
+	control_stream = fdopen(xconnect2(&server->s_in), "r+");
+#else
 	control_stream = fdopen(xconnect(server->s_in), "r+");
+#endif
 	if (control_stream == NULL) {
 		bb_perror_msg_and_die("Couldnt open control stream");
 	}
@@ -291,7 +305,6 @@ int ftpgetput_main(int argc, char **argv)
 
 	/* socket to ftp server */
 	FILE *control_stream;
-	struct sockaddr_in s_in;
 
 	/* continue a prev transfer (-c) */
 	ftp_host_info_t *server;
@@ -335,13 +348,24 @@ int ftpgetput_main(int argc, char **argv)
 	/* We want to do exactly _one_ DNS lookup, since some
 	 * sites (i.e. ftp.us.debian.org) use round-robin DNS
 	 * and we want to connect to only one IP... */
-	server->s_in = &s_in;
-	bb_lookup_host(&s_in, argv[optind]);
-	s_in.sin_port = bb_lookup_port(port, "tcp", 21);
-	if (verbose_flag) {
-		printf("Connecting to %s[%s]:%d\n",
+#ifdef CONFIG_FEATURE_IPV6
+	memset(&server->s_in, 0, sizeof(server->s_in));
+	server->s_in.sin6_family = AF_INET6;
+	server->s_in.sin6_port = bb_lookup_port(port, "tcp", 21);
+	(void)ResolveAddress(argv[optind], RESOLVE_ANY, 0, &server->s_in.sin6_addr);
+#else
+	{
+		struct sockaddr_in s_in;
+	
+		server->s_in = &s_in;
+		bb_lookup_host(&s_in, argv[optind]);
+		s_in.sin_port = bb_lookup_port(port, "tcp", 21);
+		if (verbose_flag) {
+			printf("Connecting to %s[%s]:%d\n",
 				argv[optind], inet_ntoa(s_in.sin_addr), ntohs(s_in.sin_port));
+		}
 	}
+#endif
 
 	/*  Connect/Setup/Configure the FTP session */
 	control_stream = ftp_login(server);
