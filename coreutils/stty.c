@@ -187,12 +187,12 @@ static const char stty_dec  [] = "dec";
 
 /* Each mode.  */
 struct mode_info {
-	const char *name;       /* Name given on command line.           */
+	const char * const name;    /* Name given on command line.           */
 	/* enum mode_type type; */
-	char type;              /* Which structure element to change.    */
-	char flags;             /* Setting and display options.          */
-	unsigned short mask;     /* Other bits to turn off for this mode. */
-	unsigned long bits;     /* Bits to set for this mode.            */
+	const unsigned char type;   /* Which structure element to change.    */
+	const unsigned char flags;  /* Setting and display options.          */
+	const tcflag_t mask;        /* Other bits to turn off for this mode. */
+	const tcflag_t bits;        /* Bits to set for this mode.            */
 };
 
 #define MI_ENTRY(N,T,F,B,M) { N, T, F, M, B }
