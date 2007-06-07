@@ -33,7 +33,7 @@ int bb_echo(int ATTRIBUTE_UNUSED argc, char **argv)
 {
 #ifndef CONFIG_FEATURE_FANCY_ECHO
 #define eflag '\\'
-	++argv;
+	arg = *++argv;
 #else
 	const char *p;
 	int nflag = 1;
