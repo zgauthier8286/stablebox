@@ -120,7 +120,7 @@ void data_extract_all(archive_handle_t *archive_handle)
 		chmod(file_header->name, file_header->mode);
 	}
 
-	if (archive_handle->flags & ARCHIVE_PRESERVE_DATE) {
+	if (archive_handle->flags & ARCHIVE_PRESERVE_DATE && !S_ISLNK(file_header->mode)) {
 		struct utimbuf t;
 		t.actime = t.modtime = file_header->mtime;
 		utime(file_header->name, &t);
