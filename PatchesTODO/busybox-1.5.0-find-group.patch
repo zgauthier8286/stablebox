@@ -1,0 +1,71 @@
+diff -ru busybox-1.5.0.orig/findutils/Config.in busybox-1.5.0/findutils/Config.in
+--- busybox-1.5.0.orig/findutils/Config.in	2007-04-03 08:05:25 +0000
++++ busybox-1.5.0/findutils/Config.in	2007-04-03 08:14:47 +0000
+@@ -90,6 +90,13 @@
+ 	help
+ 	  Support the 'find -user' option for searching by username or uid.
+ 
++config FEATURE_FIND_GROUP
++	bool "Enable group/gid matching (-group) option"
++	default y
++	depends on FIND
++	help
++	  Support the 'find -group' option for searching by group name or gid.
++
+ config FEATURE_FIND_NOT
+ 	bool "Enable the 'not' (!) operator"
+ 	default y
+diff -ru busybox-1.5.0.orig/findutils/find.c busybox-1.5.0/findutils/find.c
+--- busybox-1.5.0.orig/findutils/find.c	2007-04-03 08:05:25 +0000
++++ busybox-1.5.0/findutils/find.c	2007-04-03 08:59:51 +0000
+@@ -71,7 +71,8 @@
+ USE_FEATURE_FIND_NEWER( ACTS(newer, time_t newer_mtime;))
+ USE_FEATURE_FIND_INUM(  ACTS(inum,  ino_t inode_num;))
+ USE_FEATURE_FIND_EXEC(  ACTS(exec,  char **exec_argv; unsigned int *subst_count; int exec_argc;))
+-USE_FEATURE_FIND_USER(  ACTS(user,  int uid;))
++USE_FEATURE_FIND_USER(  ACTS(user,  uid_t uid;))
++USE_FEATURE_FIND_GROUP( ACTS(group, gid_t gid;))
+ USE_DESKTOP(            ACTS(paren, action ***subexpr;))
+ USE_DESKTOP(            ACTS(size,  off_t size;))
+ USE_DESKTOP(            ACTS(prune))
+@@ -231,6 +232,13 @@
+ }
+ #endif
+ 
++#if ENABLE_FEATURE_FIND_GROUP
++ACTF(group)
++{
++	return (statbuf->st_gid == ap->gid);
++}
++#endif
++
+ #if ENABLE_FEATURE_FIND_PRINT0
+ ACTF(print0)
+ {
+@@ -344,7 +352,7 @@
+ 	unsigned cur_action = 0;
+ 	USE_FEATURE_FIND_NOT( smallint invert_flag = 0; )
+ 
+-	action* alloc_action(int sizeof_struct, action_fp f)
++	static action* alloc_action(int sizeof_struct, action_fp f)
+ 	{
+ 		action *ap;
+ 		appp[cur_group] = xrealloc(appp[cur_group], (cur_action+2) * sizeof(*appp));
+@@ -527,6 +535,17 @@
+ 				ap->uid = xuname2uid(arg1);
+ 		}
+ #endif
++#if ENABLE_FEATURE_FIND_GROUP
++		else if (strcmp(arg, "-group") == 0) {
++			action_group *ap;
++			if (!*++argv)
++				bb_error_msg_and_die(bb_msg_requires_arg, arg);
++			ap = ALLOC_ACTION(group);
++			ap->gid = bb_strtou(arg1, NULL, 10);
++			if (errno)
++				ap->gid = xgroup2gid(arg1);
++		}
++#endif
+ #if ENABLE_DESKTOP
+ 		else if (LONE_CHAR(arg, '(')) {
+ 			action_paren *ap;
