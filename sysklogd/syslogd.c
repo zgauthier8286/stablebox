@@ -1,14 +1,10 @@
 /* vi: set sw=4 ts=4: */
 /*
- * Mini syslogd implementation for busybox
+ * Mini syslogd implementation
  *
  * Copyright (C) 1999-2004 by Erik Andersen <andersen@codepoet.org>
- *
  * Copyright (C) 2000 by Karl M. Hegbloom <karlheg@debian.org>
- *
  * "circular buffer" Copyright (C) 2001 by Gennady Feldman <gfeldman@gena01.com>
- *
- * Maintainer: Gennady Feldman <gfeldman@gena01.com> as of Mar 12, 2001
  *
  * Licensed under the GPL v2 or later, see the file LICENSE in this tarball.
  */
@@ -34,7 +30,6 @@
 #include <sys/param.h>
 #ifdef CONFIG_FEATURE_REMOTE_LOG_IPV6
 #include "resolv6.h"
-
 #endif
 
 /* SYSLOG_NAMES defined to pull some extra junk from syslog.h */
@@ -47,6 +42,8 @@
 
 /* Path to the unix socket */
 static char lfile[MAXPATHLEN];
+	
+static uid_t user_id = -1;
 
 static const char *logFilePath = __LOG_FILE;
 
@@ -323,6 +320,7 @@ static void message(char *fmt, ...)
 	if ((fd = device_open(logFilePath,
 					O_WRONLY | O_CREAT | O_NOCTTY | O_APPEND |
 							 O_NONBLOCK)) >= 0) {
+		fchown(fd, user_id, -1);
 		fl.l_type = F_WRLCK;
 		fcntl(fd, F_SETLKW, &fl);
 #ifdef CONFIG_FEATURE_ROTATE_LOGFILE
@@ -347,6 +345,7 @@ static void message(char *fmt, ...)
 					fd = device_open (logFilePath,
 						   O_WRONLY | O_CREAT | O_NOCTTY | O_APPEND |
 						   O_NONBLOCK);
+					fchown(fd, user_id, -1);
 					fl.l_type = F_WRLCK;
 					fcntl (fd, F_SETLKW, &fl);
 				} else {
@@ -619,14 +618,11 @@ static void doSyslogd(void)
 
 int syslogd_main(int argc, char **argv)
 {
-	int opt;
-
-	int doFork = TRUE;
-
+	int opt, doFork = TRUE;
 	char *p;
 
 	/* do normal option parsing */
-	while ((opt = getopt(argc, argv, "m:nO:s:Sb:R:LC::")) > 0) {
+	while ((opt = getopt(argc, argv, "m:nO:s:Sb:R:LC::u:")) > 0) {
 		switch (opt) {
 		case 'm':
 			MarkInterval = atoi(optarg) * 60;
@@ -670,6 +666,11 @@ int syslogd_main(int argc, char **argv)
 #endif
 		case 'S':
 			small = true;
+			break;
+		case 'u':
+			if (!isdigit(*optarg))
+				bb_error_msg_and_die("UID must be numeric");
+			user_id = atoi(optarg);
 			break;
 		default:
 			bb_show_usage();
