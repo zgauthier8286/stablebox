@@ -74,7 +74,7 @@ static int read_base64(FILE *src_stream, FILE *dst_stream)
 {
 	static const char base64_table[] =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n";
-	char term_count = 0;
+	char term_count = 1;
 
 	while (1) {
 		char translated[4];
@@ -117,7 +117,9 @@ static int read_base64(FILE *src_stream, FILE *dst_stream)
 		}
 
 		/* Merge 6 bit chars to 8 bit */
-	    fputc(translated[0] << 2 | translated[1] >> 4, dst_stream);
+		if (count > 1) {
+			fputc(translated[0] << 2 | translated[1] >> 4, dst_stream);
+		}
 		if (count > 2) {
 			fputc(translated[1] << 4 | translated[2] >> 2, dst_stream);
 		}

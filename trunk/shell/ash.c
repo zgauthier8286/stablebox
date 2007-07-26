@@ -11306,13 +11306,13 @@ shcmd(union node *cmd, FILE *fp)
 	first = 1;
 	for (np = cmd->ncmd.args ; np ; np = np->narg.next) {
 		if (! first)
-			putchar(' ');
+			putc(' ', fp);
 		sharg(np, fp);
 		first = 0;
 	}
 	for (np = cmd->ncmd.redirect ; np ; np = np->nfile.next) {
 		if (! first)
-			putchar(' ');
+			putc(' ', fp);
 		switch (np->nfile.type) {
 			case NTO:       s = ">";  dftfd = 1; break;
 			case NCLOBBER:  s = ">|"; dftfd = 1; break;
