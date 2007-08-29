@@ -11,10 +11,13 @@ ifeq ($(filter $(noconfig_targets),$(MAKECMDGOALS)),)
 endif
 
 #--------------------------------------------------------
-PROG      := stablebox
 MAJOR_VERSION   :=1
 MINOR_VERSION   :=0
-SUBLEVEL_VERSION:=4
+SUBLEVEL_VERSION:=5
+
+
+#--------------------------------------------------------
+PROG      := stablebox
 VERSION   :=$(MAJOR_VERSION).$(MINOR_VERSION).$(SUBLEVEL_VERSION)
 BUILDTIME := $(shell TZ=UTC date -u "+%Y.%m.%d-%H:%M%z")
 
