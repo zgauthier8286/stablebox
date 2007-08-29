@@ -402,7 +402,7 @@ int mount_main(int argc, char **argv)
 
 	// Parse remaining options
 
-	while ((opt = getopt(argc, argv, "o:t:rwavnf")) > 0) {
+	while ((opt = getopt(argc, argv, "o:t:rwavnfi")) > 0) {
 		switch (opt) {
 			case 'o':
 				append_mount_options(&cmdopts, optarg);
@@ -425,8 +425,9 @@ int mount_main(int argc, char **argv)
 			case 'f':
 				USE_FEATURE_MTAB_SUPPORT(fakeIt = FALSE;)
 				break;
+			case 'i':
 			case 'v':
-				break;		// ignore -v
+				break;		// ignore
 			default:
 				bb_show_usage();
 		}
