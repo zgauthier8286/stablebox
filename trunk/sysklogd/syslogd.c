@@ -317,9 +317,7 @@ static void message(char *fmt, ...)
 
 	} else
 #endif
-	if ((fd = device_open(logFilePath,
-					O_WRONLY | O_CREAT | O_NOCTTY | O_APPEND |
-							 O_NONBLOCK)) >= 0) {
+	if ((fd = open(logFilePath, O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK, 0660)) >= 0) {
 		fchown(fd, user_id, -1);
 		fl.l_type = F_WRLCK;
 		fcntl(fd, F_SETLKW, &fl);
@@ -342,9 +340,8 @@ static void message(char *fmt, ...)
 					fcntl (fd, F_SETLKW, &fl);
 					close(fd);
 					rename(logFilePath, newFile);
-					fd = device_open (logFilePath,
-						   O_WRONLY | O_CREAT | O_NOCTTY | O_APPEND |
-						   O_NONBLOCK);
+					fd = open (logFilePath,
+						   O_WRONLY | O_CREAT | O_NOCTTY | O_NONBLOCK);
 					fchown(fd, user_id, -1);
 					fl.l_type = F_WRLCK;
 					fcntl (fd, F_SETLKW, &fl);
@@ -354,6 +351,7 @@ static void message(char *fmt, ...)
 			}
 		}
 #endif
+		lseek(fd,0,SEEK_END);
 		va_start(arguments, fmt);
 		vdprintf(fd, fmt, arguments);
 		va_end(arguments);
