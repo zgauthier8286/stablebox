@@ -317,7 +317,7 @@ static void message(char *fmt, ...)
 
 	} else
 #endif
-	if ((fd = open(logFilePath, O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK, 0666)) >= 0) {
+	if ((fd = open(logFilePath, O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK, 0644)) >= 0) {
 		if (user_id != -1)
 			fchown(fd, user_id, -1);
 		fl.l_type = F_WRLCK;
@@ -342,7 +342,7 @@ static void message(char *fmt, ...)
 					close(fd);
 					rename(logFilePath, newFile);
 					fd = open(logFilePath,
-						   O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK, 0666);
+						   O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK, 0644);
 					if (user_id != -1)
 						fchown(fd, user_id, -1);
 					fl.l_type = F_WRLCK;
