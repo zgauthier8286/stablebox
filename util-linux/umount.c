@@ -16,10 +16,10 @@
 #include <errno.h>
 #include <getopt.h>
 
-#define OPTION_STRING		"flDnravd"
+#define OPTION_STRING		"flDnravdi"
 #define OPT_FORCE			1
 #define OPT_LAZY			2
-#define OPT_DONTFREELOOP	4
+#define OPT_DONTFREELOOP		4
 #define OPT_NO_MTAB			8
 #define OPT_REMOUNT			16
 #define OPT_ALL				(ENABLE_FEATURE_UMOUNT_ALL ? 32 : 0)
