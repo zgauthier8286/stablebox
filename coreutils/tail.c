@@ -66,7 +66,7 @@ static ssize_t tail_read(int fd, char *buf, size_t count)
 	struct stat sbuf;
 
 	end = current = lseek(fd, 0, SEEK_CUR);
-	if (!fstat(fd, &sbuf))
+	if (!fstat(fd, &sbuf) && sbuf.st_size)
 		end = sbuf.st_size;
 	lseek(fd, end < current ? 0 : current, SEEK_SET);
 	if ((r = safe_read(fd, buf, count)) < 0) {
