@@ -650,7 +650,8 @@ int telnet_main(int argc, char** argv)
 #ifdef CONFIG_FEATURE_IPV6
 		memset(&s_in, 0, sizeof(s_in));
 		s_in.sin6_family = AF_INET6;
-		(void)ResolveAddress(argv[optind++], RESOLVE_ANY, 0, &s_in.sin6_addr);
+		if (!ResolveAddress(argv[optind++], RESOLVE_ANY, 0, &s_in.sin6_addr))
+			doexit(1);
 		s_in.sin6_port = bb_lookup_port((optind < argc) ? argv[optind++] :
 				"telnet", "tcp", 23);
 #else
@@ -666,7 +667,8 @@ int telnet_main(int argc, char** argv)
 #ifdef CONFIG_FEATURE_IPV6
 	memset(&s_in, 0, sizeof(s_in));
 	s_in.sin6_family = AF_INET6;
-	(void)ResolveAddress(argv[1], RESOLVE_ANY, 0, s_in.sin6_addr);
+	if (!ResolveAddress(argv[1], RESOLVE_ANY, 0, s_in.sin6_addr))
+		doexit(1);
 	s_in.sin6_port = bb_lookup_port((argc == 3) ? argv[2] : "telnet", "tcp", 23);
 #else
 	bb_lookup_host(&s_in, argv[1]);
