@@ -2564,7 +2564,7 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"\n\t-C [size(KiB)]\tLog to a circular buffer (read the buffer using logread)")
 #define syslogd_example_usage \
 	"$ syslogd -R masterlog\n" \
-	"$ syslogd -R 192.168.1.1\n"
+	"$ syslogd -R 192.168.1.1\n" \
 	"$ syslogd -R fe01::1:601\n"
 
 #ifndef CONFIG_FEATURE_FANCY_TAIL
