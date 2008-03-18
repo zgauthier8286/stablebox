@@ -2557,13 +2557,14 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"\n\t-s SIZE\t\tMax size (KB) before rotate (default=200KB, 0=off)\n" \
 	"\t-b NUM\t\tNumber of rotated logs to keep (default=1, max=99, 0=purge)") \
 	USAGE_REMOTE_LOG( \
-	"\n\t-R HOST[:PORT]\tLog to IP or hostname on PORT (default PORT=514/UDP)\n" \
+	"\n\t-R HOST\tLog to IP or hostname\n" \
 	"\t-L\t\tLog locally and via network logging (default is network only)") \
+	"\t-p\t\tChange network logging port (default is 514 UDP)") \
 	USAGE_IPC_LOG( \
 	"\n\t-C [size(KiB)]\tLog to a circular buffer (read the buffer using logread)")
 #define syslogd_example_usage \
-	"$ syslogd -R masterlog:514\n" \
-	"$ syslogd -R 192.168.1.1:601\n"
+	"$ syslogd -R masterlog\n" \
+	"$ syslogd -R 192.168.1.1\n"
 	"$ syslogd -R fe01::1:601\n"
 
 #ifndef CONFIG_FEATURE_FANCY_TAIL

@@ -26,9 +26,20 @@ static struct pam_conv conv = {
 };
 #endif
 
+#define PWLOOKUP                              	\
+do {                                           	\
+	if (!( pw = getpwnam ( username ))) {   \
+	      	pw_copy.pw_name   = "UNKNOWN"; 	\
+              	pw_copy.pw_passwd = "!";       	\
+                opt_fflag = 0;                 	\
+                failed = 1;                    	\
+        } else                                 	\
+                pw_copy = *pw;                 	\
+                pw = &pw_copy;                 	\
+       	}                                      	\
+      	while(0);
 
 #ifdef CONFIG_FEATURE_UTMP
-// import from utmp.c
 static void checkutmp(int picky);
 static void setutmp(const char *name, const char *line);
 /* Stuff global to this file */
@@ -40,28 +51,23 @@ static struct utmp utent;
 #define EMPTY_USERNAME_COUNT    10
 #define USERNAME_SIZE 33	/* includes null */
 
-
 static int check_nologin ( int amroot );
 
 #if defined CONFIG_FEATURE_SECURETTY
 static int check_tty ( const char *tty );
-
 #else
 static inline int check_tty ( const char *tty )  { return 1; }
-
 #endif
 
 static int is_my_tty ( const char *tty );
 static int login_prompt ( char *buf_name );
 static void motd ( void );
 
-
 static void alarm_handler ( int sig ATTRIBUTE_UNUSED)
 {
 	fprintf (stderr, "\nLogin timed out after %d seconds.\n", TIMEOUT );
 	exit ( EXIT_SUCCESS );
 }
-
 
 int login_main(int argc, char **argv)
 {
@@ -74,7 +80,7 @@ int login_main(int argc, char **argv)
 	int flag;
 	int failed;
 	int count=0;
-	struct passwd *pw, pw_copy;
+	struct passwd *pw = NULL, pw_copy;
 #ifdef CONFIG_WHEEL_GROUP
 	struct group *grp;
 #endif
@@ -157,10 +163,10 @@ int login_main(int argc, char **argv)
 	openlog ( "login", LOG_PID | LOG_CONS | LOG_NOWAIT, LOG_AUTH );
 
 	while ( 1 ) {
-		failed = 0;
 #if ENABLE_PAM
-        pamret = PAM_SUCCESS;
+		pamret = PAM_SUCCESS;
 #endif
+		failed = 0;
 
 		if ( !username[0] )
 			if(!login_prompt ( username ))
@@ -171,65 +177,53 @@ int login_main(int argc, char **argv)
 			alarmstarted = 1;
 		}
 
-#define PWLOOKUP                                       \
-        do {                                           \
-               if (!( pw = getpwnam ( username ))) {   \
-                        pw_copy.pw_name   = "UNKNOWN"; \
-                        pw_copy.pw_passwd = "!";       \
-                        opt_fflag = 0;                 \
-                        failed = 1;                    \
-                } else                                 \
-                        pw_copy = *pw;                 \
-                pw = &pw_copy;                         \
-            }                                          \
-        while(0);
-
 #if ENABLE_PAM
-        pamret = pam_start( "login", username, &conv, &pamh );
-        if (pamret != PAM_SUCCESS) {
-            // pam failed, so abort the login
-            bb_error_msg("PAM initialization failed: %s", pam_strerror(pamh, pamret));
-            failed = 1;
-            goto auth_ok;
-        }
-        else {
-            // continuing with pam authentication
-            // set TTY (so things like securetty work)
-            if((pamret = pam_set_item(pamh, PAM_TTY, tty)) != PAM_SUCCESS) {
-                bb_error_msg("Failed to pam_set_item TTY: %s", pam_strerror(pamh, pamret));
-                failed = 1;
-                goto auth_ok;
-            }
-            else if ((pamret = pam_authenticate(pamh, 0)) == PAM_SUCCESS) {
-                // Then check that the account is healthy.
-                if ((pamret = pam_acct_mgmt(pamh, 0)) != PAM_SUCCESS) // No, it isn't
-                    bb_error_msg("User not allowed access: %s",pam_strerror(pamh, pamret));
-                else {
-                    // read user back
-                    const void *pamuser;
-                    if(pam_get_item(pamh, PAM_USER, &pamuser)!= PAM_SUCCESS)
-                        bb_error_msg("pam_get_item failed on username");
-                    else
-                        strcpy(username, pamuser);
-                }
-            }
-            // If we get here, the user was authenticated, and is
-            // granted access.
-            if (pam_end(pamh, pamret) != PAM_SUCCESS)
-                bb_error_msg("PAM cleaning up failed");
+        	pamret = pam_start( "login", username, &conv, &pamh );
+        	if (pamret != PAM_SUCCESS) {
+            		// pam failed, so abort the login
+            		bb_error_msg("PAM initialization failed: %s", pam_strerror(pamh, pamret));
+            		failed = 1;
+            		goto auth_ok;
+        	}
+        	else {
+            		// continuing with pam authentication
+            		// set TTY (so things like securetty work)
+            		if((pamret = pam_set_item(pamh, PAM_TTY, tty)) != PAM_SUCCESS) {
+                		bb_error_msg("Failed to pam_set_item TTY: %s", pam_strerror(pamh, pamret));
+                		failed = 1;
+                		goto auth_ok;
+            		}
+            		else if ((pamret = pam_authenticate(pamh, 0)) == PAM_SUCCESS) {
+                		// Then check that the account is healthy.
+                		if ((pamret = pam_acct_mgmt(pamh, 0)) != PAM_SUCCESS) // No, it isn't
+                    			bb_error_msg("User not allowed access: %s",pam_strerror(pamh, pamret));
+                		else {
+                    			// read user back
+                    			const void *pamuser;
+                    			if(pam_get_item(pamh, PAM_USER, &pamuser)!= PAM_SUCCESS)
+                        			bb_error_msg("pam_get_item failed on username");
+                    			else
+                       				strcpy(username, pamuser);
+                		}
+            		}
+            	
+					// If we get here, the user was authenticated, and is
+            		// granted access.
+            		if (pam_end(pamh, pamret) != PAM_SUCCESS)
+                		bb_error_msg("PAM cleaning up failed");
 
-            if (pamret == PAM_SUCCESS)
-                failed = 0;
-            else
-                failed = 1;
+            		if (pamret == PAM_SUCCESS)
+                		failed = 0;
+            		else
+                		failed = 1;
             
-            PWLOOKUP
-            goto auth_ok;
-        }
-        // Everything from here to auth_ok: is skipped when running
-        // PAM.  This is all PAM's responsibility anyway.  
+            		PWLOOKUP
+            		goto auth_ok;
+        	}
+        	// Everything from here to auth_ok: is skipped when running
+        	// PAM.  This is all PAM's responsibility anyway.  
 #else
-               PWLOOKUP
+		PWLOOKUP
 #endif /* ENABLE_PAM */
 
 		if (( pw-> pw_passwd [0] == '!' ) || ( pw-> pw_passwd[0] == '*' ))
@@ -263,7 +257,7 @@ auth_ok:
 		if ( ++count == 3 ) {
 			syslog ( LOG_WARNING, "invalid password for `%s'%s\n", pw->pw_name, fromhost);
 			return EXIT_FAILURE;
-	}
+		}
 	}
 
 	alarm ( 0 );
@@ -302,8 +296,6 @@ auth_ok:
 
 	return EXIT_FAILURE;
 }
-
-
 
 static int login_prompt ( char *buf_name )
 {

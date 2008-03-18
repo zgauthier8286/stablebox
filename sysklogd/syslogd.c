@@ -620,9 +620,11 @@ int syslogd_main(int argc, char **argv)
 {
 	int opt, doFork = TRUE;
 	char *p;
+#ifdef CONFIG_FEATURE_REMOTE_LOG
+	unsigned short remote_port = DEFAULT_SYSLOG_PORT;
 
 	/* do normal option parsing */
-	while ((opt = getopt(argc, argv, "m:nO:s:Sb:R:LC::u:")) > 0) {
+	while ((opt = getopt(argc, argv, "m:np:O:s:Sb:R:LC::u:")) > 0) {
 		switch (opt) {
 		case 'm':
 			MarkInterval = atoi(optarg) * 60;
@@ -643,9 +645,12 @@ int syslogd_main(int argc, char **argv)
 			break;
 #endif
 #ifdef CONFIG_FEATURE_REMOTE_LOG
+		case 'p':
+			remote_port = atoi(optarg);
+			break;
+
 		case 'R':
 			RemoteHosts[NumRemoteHosts].RemoteHost = bb_xstrdup(optarg);
-			RemoteHosts[NumRemoteHosts].RemotePort = DEFAULT_SYSLOG_PORT;
 			RemoteHosts[NumRemoteHosts].remotefd = -1;
 			NumRemoteHosts++;
 			break;
@@ -681,8 +686,11 @@ int syslogd_main(int argc, char **argv)
 	/* If they have not specified remote logging, then log locally */
 	if (NumRemoteHosts == 0)
 		local_logging = TRUE;
+	else {
+		for (i = 0; i < NumRemoteHosts; i++)
+			RemoteHost[i].RemotePort = remote_port;
+	}
 #endif
-
 
 	/* Store away localhost's name before the fork */
 	gethostname(LocalHostName, sizeof(LocalHostName));
