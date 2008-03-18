@@ -622,6 +622,8 @@ int syslogd_main(int argc, char **argv)
 	char *p;
 #ifdef CONFIG_FEATURE_REMOTE_LOG
 	unsigned short remote_port = DEFAULT_SYSLOG_PORT;
+	int i;
+#endif
 
 	/* do normal option parsing */
 	while ((opt = getopt(argc, argv, "m:np:O:s:Sb:R:LC::u:")) > 0) {
@@ -688,7 +690,7 @@ int syslogd_main(int argc, char **argv)
 		local_logging = TRUE;
 	else {
 		for (i = 0; i < NumRemoteHosts; i++)
-			RemoteHost[i].RemotePort = remote_port;
+			RemoteHosts[i].RemotePort = remote_port;
 	}
 #endif
 
