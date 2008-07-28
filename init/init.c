@@ -176,6 +176,43 @@ static int waitfor(const struct init_action *a, pid_t pid);
 static void shutdown_signal(int sig);
 #endif
 
+static void BlockSignals(void)
+{	
+	sigset_t block_signals;
+
+	sigemptyset(&block_signals);
+	sigaddset(&block_signals, SIGHUP);
+	sigaddset(&block_signals, SIGQUIT);
+	sigaddset(&block_signals, SIGCHLD);
+	sigaddset(&block_signals, SIGUSR1);
+	sigaddset(&block_signals, SIGUSR2);
+	sigaddset(&block_signals, SIGINT);
+	sigaddset(&block_signals, SIGTERM);
+	sigaddset(&block_signals, SIGCONT);
+	sigaddset(&block_signals, SIGSTOP);
+	sigaddset(&block_signals, SIGTSTP);
+	sigprocmask(SIG_BLOCK, &block_signals, NULL);
+}
+	
+static void UnblockSignals(void)
+{
+	sigset_t unblock_signals;
+
+	/* unblock all signals, blocked in shutdown_system() */
+	sigemptyset(&unblock_signals);
+	sigaddset(&unblock_signals, SIGHUP);
+	sigaddset(&unblock_signals, SIGQUIT);
+	sigaddset(&unblock_signals, SIGCHLD);
+	sigaddset(&unblock_signals, SIGUSR1);
+	sigaddset(&unblock_signals, SIGUSR2);
+	sigaddset(&unblock_signals, SIGINT);
+	sigaddset(&unblock_signals, SIGTERM);
+	sigaddset(&unblock_signals, SIGCONT);
+	sigaddset(&unblock_signals, SIGSTOP);
+	sigaddset(&unblock_signals, SIGTSTP);
+	sigprocmask(SIG_UNBLOCK, &unblock_signals, NULL);
+}
+
 static void loop_forever(void)
 {
 	while (1)
@@ -657,26 +694,12 @@ static void init_reboot(unsigned long magic)
 
 static void shutdown_system(void)
 {
-	sigset_t block_signals;
-
 	/* run everything to be run at "shutdown".  This is done _prior_
 	 * to killing everything, in case people wish to use scripts to
 	 * shut things down gracefully... */
 	run_actions(SHUTDOWN);
 
-	/* first disable all our signals */
-	sigemptyset(&block_signals);
-	sigaddset(&block_signals, SIGHUP);
-	sigaddset(&block_signals, SIGQUIT);
-	sigaddset(&block_signals, SIGCHLD);
-	sigaddset(&block_signals, SIGUSR1);
-	sigaddset(&block_signals, SIGUSR2);
-	sigaddset(&block_signals, SIGINT);
-	sigaddset(&block_signals, SIGTERM);
-	sigaddset(&block_signals, SIGCONT);
-	sigaddset(&block_signals, SIGSTOP);
-	sigaddset(&block_signals, SIGTSTP);
-	sigprocmask(SIG_BLOCK, &block_signals, NULL);
+	BlockSignals();
 
 	/* Allow Ctrl-Alt-Del to reboot system. */
 	init_reboot(RB_ENABLE_CAD);
@@ -700,26 +723,13 @@ static void shutdown_system(void)
 static void exec_signal(int sig ATTRIBUTE_UNUSED)
 {
 	struct init_action *a, *tmp;
-	sigset_t unblock_signals;
 
 	for (a = init_action_list; a; a = tmp) {
 		tmp = a->next;
 		if (a->action & RESTART) {
 			shutdown_system();
 
-			/* unblock all signals, blocked in shutdown_system() */
-			sigemptyset(&unblock_signals);
-			sigaddset(&unblock_signals, SIGHUP);
-			sigaddset(&unblock_signals, SIGQUIT);
-			sigaddset(&unblock_signals, SIGCHLD);
-			sigaddset(&unblock_signals, SIGUSR1);
-			sigaddset(&unblock_signals, SIGUSR2);
-			sigaddset(&unblock_signals, SIGINT);
-			sigaddset(&unblock_signals, SIGTERM);
-			sigaddset(&unblock_signals, SIGCONT);
-			sigaddset(&unblock_signals, SIGSTOP);
-			sigaddset(&unblock_signals, SIGTSTP);
-			sigprocmask(SIG_UNBLOCK, &unblock_signals, NULL);
+			UnblockSignals();
 
 			/* Close whatever files are open. */
 			close(0);
@@ -837,9 +847,6 @@ static void new_init_action(int action, const char *command, const char *cons)
 	strcpy(new_action->command, command);
 	new_action->action = action;
 	strcpy(new_action->terminal, cons);
-#if 0   /* calloc zeroed always */
-	new_action->pid = 0;
-#endif
 	messageD(LOG|CONSOLE, "command='%s' action='%d' terminal='%s'\n",
 		new_action->command, new_action->action, new_action->terminal);
 }
@@ -1090,6 +1097,7 @@ int init_main(int argc, char **argv)
 	/* Make the command line just say "init"  -- thats all, nothing else */
 	fixup_argv(argc, argv, "init");
 
+	BlockSignals();
 	/* Now run everything that needs to be run */
 
 	/* First run the sysinit command */
@@ -1108,6 +1116,7 @@ int init_main(int argc, char **argv)
 	signal(SIGHUP, SIG_IGN);
 #endif /* CONFIG_FEATURE_USE_INITTAB */
 
+	UnblockSignals();
 
 	/* Now run the looping stuff for the rest of forever */
 	while (1) {
