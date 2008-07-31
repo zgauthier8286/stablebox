@@ -1097,7 +1097,6 @@ int init_main(int argc, char **argv)
 	/* Make the command line just say "init"  -- thats all, nothing else */
 	fixup_argv(argc, argv, "init");
 
-	BlockSignals();
 	/* Now run everything that needs to be run */
 
 	/* First run the sysinit command */
@@ -1115,8 +1114,6 @@ int init_main(int argc, char **argv)
 #else
 	signal(SIGHUP, SIG_IGN);
 #endif /* CONFIG_FEATURE_USE_INITTAB */
-
-	UnblockSignals();
 
 	/* Now run the looping stuff for the rest of forever */
 	while (1) {
