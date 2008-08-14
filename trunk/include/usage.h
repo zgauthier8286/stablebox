@@ -1978,6 +1978,7 @@ USE_FEATURE_MDEV_CONFIG( \
 	"Options:\n" \
 	"\t-c COUNT\tSend only COUNT pings\n" \
 	"\t-s SIZE\t\tSend SIZE data bytes in packets (default=56)\n" \
+	"\t-I INTERFACE\t\tUsed the specified interface as source\n" \
 	"\t-q\t\tQuiet mode, only displays output at start\n" \
 	"\t\t\tand when finished"
 #define ping6_example_usage \
@@ -2665,13 +2666,15 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 
 #ifdef CONFIG_FEATURE_TELNET_AUTOLOGIN
 #define telnet_trivial_usage \
-	"[-a] [-l USER] HOST [PORT]"
+	"[-a] [-l USER] [-I IFNAME] HOST [PORT]"
 #define telnet_full_usage \
 	"Telnet is used to establish interactive communication with another\n" \
 	"computer over a network using the TELNET protocol.\n\n" \
 	"Options:\n" \
 	"\t-a\t\tAttempt an automatic login with the USER variable\n" \
 	"\t-l USER\t\tAttempt an automatic login with the USER argument\n" \
+	"\t-I IFNAME\t\tUse IFNAME as the source interface.  This is required\n" \
+	"\t\t when trying to connect to an IPv6 address with link scope.\n" \
 	"\tHOST\t\tThe official name, alias or the IP address of the\n" \
 	"\t\t\tremote host.\n" \
 	"\tPORT\t\tThe remote port number to connect to.  If it is not\n" \

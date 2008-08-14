@@ -182,15 +182,15 @@ static void BlockSignals(void)
 
 	sigemptyset(&block_signals);
 	sigaddset(&block_signals, SIGHUP);
-	sigaddset(&block_signals, SIGQUIT);
 	sigaddset(&block_signals, SIGCHLD);
 	sigaddset(&block_signals, SIGUSR1);
 	sigaddset(&block_signals, SIGUSR2);
-	sigaddset(&block_signals, SIGINT);
 	sigaddset(&block_signals, SIGTERM);
 	sigaddset(&block_signals, SIGCONT);
 	sigaddset(&block_signals, SIGSTOP);
 	sigaddset(&block_signals, SIGTSTP);
+	sigaddset(&block_signals, SIGQUIT);
+	sigaddset(&block_signals, SIGINT);
 	sigprocmask(SIG_BLOCK, &block_signals, NULL);
 }
 	
@@ -201,15 +201,15 @@ static void UnblockSignals(void)
 	/* unblock all signals, blocked in shutdown_system() */
 	sigemptyset(&unblock_signals);
 	sigaddset(&unblock_signals, SIGHUP);
-	sigaddset(&unblock_signals, SIGQUIT);
 	sigaddset(&unblock_signals, SIGCHLD);
 	sigaddset(&unblock_signals, SIGUSR1);
 	sigaddset(&unblock_signals, SIGUSR2);
-	sigaddset(&unblock_signals, SIGINT);
 	sigaddset(&unblock_signals, SIGTERM);
 	sigaddset(&unblock_signals, SIGCONT);
 	sigaddset(&unblock_signals, SIGSTOP);
 	sigaddset(&unblock_signals, SIGTSTP);
+	sigaddset(&unblock_signals, SIGQUIT);
+	sigaddset(&unblock_signals, SIGINT);
 	sigprocmask(SIG_UNBLOCK, &unblock_signals, NULL);
 }
 
@@ -467,13 +467,13 @@ static pid_t run(const struct init_action *a)
 		/* Reset signal handlers that were set by the parent process */
 		signal(SIGUSR1, SIG_DFL);
 		signal(SIGUSR2, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
 		signal(SIGTERM, SIG_DFL);
 		signal(SIGHUP, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		signal(SIGCONT, SIG_DFL);
 		signal(SIGSTOP, SIG_DFL);
 		signal(SIGTSTP, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 
 		/* Create a new session and make ourself the process
 		 * group leader */
@@ -504,6 +504,7 @@ static pid_t run(const struct init_action *a)
 				/* We are the parent -- wait till the child is done */
 				signal(SIGINT, SIG_IGN);
 				signal(SIGTSTP, SIG_IGN);
+				signal(SIGSTOP, SIG_IGN);
 				signal(SIGQUIT, SIG_IGN);
 				signal(SIGCHLD, SIG_DFL);
 
@@ -786,23 +787,6 @@ static void shutdown_signal(int sig)
 	loop_forever();
 }
 
-static void ctrlaltdel_signal(int sig ATTRIBUTE_UNUSED)
-{
-	run_actions(CTRLALTDEL);
-}
-
-/* The SIGSTOP & SIGTSTP handler */
-static void stop_handler(int sig ATTRIBUTE_UNUSED)
-{
-	int saved_errno = errno;
-
-	got_cont = 0;
-	while (!got_cont)
-		pause();
-	got_cont = 0;
-	errno = saved_errno;
-}
-
 /* The SIGCONT handler */
 static void cont_handler(int sig ATTRIBUTE_UNUSED)
 {
@@ -1025,14 +1009,14 @@ int init_main(int argc, char **argv)
 	/* Set up sig handlers  -- be sure to
 	 * clear all of these in run() */
 	signal(SIGHUP, exec_signal);
-	signal(SIGQUIT, exec_signal);
 	signal(SIGUSR1, shutdown_signal);
 	signal(SIGUSR2, shutdown_signal);
-	signal(SIGINT, ctrlaltdel_signal);
 	signal(SIGTERM, shutdown_signal);
 	signal(SIGCONT, cont_handler);
-	signal(SIGSTOP, stop_handler);
-	signal(SIGTSTP, stop_handler);
+	signal(SIGSTOP, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN); 
+	signal(SIGINT, SIG_IGN); 
 
 	/* Turn off rebooting via CTL-ALT-DEL -- we get a
 	 * SIGINT on CAD so we can shut things down gracefully... */

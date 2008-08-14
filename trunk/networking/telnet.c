@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <net/if.h>
 #include "resolv6.h"
 #include "busybox.h"
 
@@ -610,6 +611,7 @@ static void cookmode(void)
 int telnet_main(int argc, char** argv)
 {
 	int len;
+	char ifname[IFNAMSIZ] = {0};
 #ifdef CONFIG_FEATURE_IPV6
 	struct sockaddr_in6 s_in;
 #else
@@ -642,6 +644,7 @@ int telnet_main(int argc, char** argv)
 	if (argc < 2)
 		bb_show_usage();
 
+	bb_getopt_ulflags(argc, argv, "I:", ifname);
 #ifdef CONFIG_FEATURE_TELNET_AUTOLOGIN
 	if (1 & bb_getopt_ulflags(argc, argv, "al:", &autologin))
 		autologin = getenv("USER");
@@ -677,6 +680,8 @@ int telnet_main(int argc, char** argv)
 #endif
 
 #ifdef CONFIG_FEATURE_IPV6
+	if (ifname[0])
+		s_in.sin6_scope_id = if_nametoindex(ifname);
 	G.netfd = xconnect2(&s_in);
 #else
 	G.netfd = xconnect(&s_in);
