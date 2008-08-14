@@ -2673,8 +2673,8 @@ USE_FEATURE_START_STOP_DAEMON_FANCY( \
 	"Options:\n" \
 	"\t-a\t\tAttempt an automatic login with the USER variable\n" \
 	"\t-l USER\t\tAttempt an automatic login with the USER argument\n" \
-	"\t-I IFNAME\t\tUse IFNAME as the source interface.  This is required\n" \
-	"\t\t when trying to connect to an IPv6 address with link scope.\n" \
+	"\t-I IFNAME\tUse IFNAME as the source interface.  This is required\n" \
+	"\t\t\twhen trying to connect to an IPv6 address with link scope.\n" \
 	"\tHOST\t\tThe official name, alias or the IP address of the\n" \
 	"\t\t\tremote host.\n" \
 	"\tPORT\t\tThe remote port number to connect to.  If it is not\n" \
