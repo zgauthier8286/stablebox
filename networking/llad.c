@@ -392,14 +392,15 @@ int llad_main(int argc, char **argv)
 				{
 					if (fds[0].revents & POLLERR) 
 					{
-						// link down
+						// Clear out any leftovers
+						(void)recv(fd, &p, 0, 0);
 						(void)usleep(100000);
 					}
 					continue;
 				}
 	
 				// read ARP packet
-				if (recv(fd, &p, 0, 0) < 0 ||
+				if (recv(fd, &p, sizeof(p), 0) < 0 ||
 				    p.hdr.ether_type != htons(ETHERTYPE_ARP) ||
 				    (p.arp.arp_op != htons(ARPOP_REQUEST) && 
  				     p.arp.arp_op != htons(ARPOP_REPLY)))
