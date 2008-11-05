@@ -399,7 +399,7 @@ int llad_main(int argc, char **argv)
 				}
 	
 				// read ARP packet
-				if (recv(fd, &p, sizeof (p), 0) < 0 ||
+				if (recv(fd, &p, 0, 0) < 0 ||
 				    p.hdr.ether_type != htons(ETHERTYPE_ARP) ||
 				    (p.arp.arp_op != htons(ARPOP_REQUEST) && 
  				     p.arp.arp_op != htons(ARPOP_REPLY)))
